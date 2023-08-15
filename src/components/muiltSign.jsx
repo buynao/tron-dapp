@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import { useState } from 'react';
 
-function SignMessage() {
+function MultiSign() {
   const [msg, setMsg] = useState('')
   return (
     <div>
@@ -14,9 +14,9 @@ function SignMessage() {
         } catch(e) {
           setMsg(e.message)
         }
-      }}>signMessageV2:{msg}</Button>
+      }}>MultiSign:{msg}</Button>
     </div>
   )
 }
 
-export default SignMessage
+export default MultiSign
