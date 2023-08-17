@@ -13,7 +13,7 @@ function SignMessage() {
         } catch(e) {
           setMsg(e.message)
         }
-      }}>signMessageV2:{msg}</Button>
+      }}>SignMessageV2:{msg}</Button>
     </div>
   )
 }

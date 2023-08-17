@@ -9,6 +9,9 @@ import MultiSign from './components/muiltSign';
 import TriggerSmartContract from './components/TriggerSmartContract';
 import eruda from 'eruda';
 import Approve from './components/Approve';
+import FreezeBalance from './components/FreezeBalance'
+import FreezeBalanceV2 from './components/FreezeBalanceV2'
+import UpdateAccountPermissions from './components/UpdateAccountPermissions';
 eruda.init()
 function App() {
   return (
@@ -16,11 +19,19 @@ function App() {
       <SendTrx />
       <SendAsset />
       <SendToken />
+      <div style={{ marginTop: 20 }} />
       <SignMessage />
       <SignMessageV2 />
+      <div style={{ marginTop: 20 }} />
       <MultiSign />
+      <div style={{ marginTop: 20 }} />
       <TriggerSmartContract />
       <Approve />
+      <div style={{ marginTop: 20 }} />
+      <FreezeBalance />
+      <FreezeBalanceV2 />
+      <div style={{ marginTop: 20 }} />
+      <UpdateAccountPermissions />
     </div>
   )
 }
