@@ -7,6 +7,9 @@ import SignMessage from './components/signMessage';
 import SignMessageV2 from './components/signMessageV2';
 import MultiSign from './components/muiltSign';
 import TriggerSmartContract from './components/TriggerSmartContract';
+import eruda from 'eruda';
+import Approve from './components/Approve';
+eruda.init()
 function App() {
   return (
     <div>
@@ -17,6 +20,7 @@ function App() {
       <SignMessageV2 />
       <MultiSign />
       <TriggerSmartContract />
+      <Approve />
     </div>
   )
 }

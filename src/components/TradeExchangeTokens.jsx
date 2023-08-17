@@ -8,13 +8,13 @@ function SendAsset() {
       <Button onClick={async () => {
         const tronWeb = window.tronWeb;
         try {
-          const transaction = await tronWeb.transactionBuilder.sendAsset("TVDGpn4hCSzJ5nkHPLetk8KQBtwaTppnkr", 100, "1002000", "TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL");
+          const transaction = await tronWeb.transactionBuilder.tradeExchangeTokens(1, "1000003",1000,1000,"410ca7c49aa44d26aabfe7f594c645cf9f17a4ff70",1)
           const signedTransaction = tronWeb.trx.sign(transaction);
           tronWeb.trx.sendTransaction(signedTransaction);
         } catch(e) {
           setMsg(e.message)
         }
-      }}>SendAsset(TRC10):{msg}</Button>
+      }}>SendAsset:{msg}</Button>
     </div>
   )
 }

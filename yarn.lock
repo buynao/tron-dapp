@@ -1129,6 +1129,11 @@ elliptic@6.5.4:
     minimalistic-assert "^1.0.1"
     minimalistic-crypto-utils "^1.0.1"
 
+eruda@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.npmmirror.com/eruda/-/eruda-3.0.1.tgz#6c07ae2b3ced54151c6e9b21f9b8da11e6ec988a"
+  integrity sha512-6q1Xdwga4JTr1mKSW4mzuWSSbmXgqpm/8Wa1QGFGfCWRjC0bCQjbS4u06M1te1moucIS3hBLlbSTPWYH2W0qbQ==
+
 esbuild@^0.18.10:
   version "0.18.20"
   resolved "https://registry.npmmirror.com/esbuild/-/esbuild-0.18.20.tgz#4709f5a34801b43b799ab7d6d82f7284a9b7a7a6"
