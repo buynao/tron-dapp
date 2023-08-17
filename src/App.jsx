@@ -12,6 +12,7 @@ import Approve from './components/Approve';
 import FreezeBalance from './components/FreezeBalance'
 import FreezeBalanceV2 from './components/FreezeBalanceV2'
 import UpdateAccountPermissions from './components/UpdateAccountPermissions';
+import SendNFT from './components/SendNFT';
 eruda.init()
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <SendTrx />
       <SendAsset />
       <SendToken />
+      <SendNFT />
       <div style={{ marginTop: 20 }} />
       <SignMessage />
       <SignMessageV2 />
