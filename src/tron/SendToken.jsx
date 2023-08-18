@@ -8,10 +8,10 @@ function SendToken() {
     <div>
       <Button onClick={async () => {
         try {
-        const tronWeb = window.tronWeb;
-        const transaction = await tronWeb.transactionBuilder.sendToken("TVDGpn4hCSzJ5nkHPLetk8KQBtwaTppnkr", 100, "1002000", "TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL");
-        const signedTransaction = tronWeb.trx.sign(transaction);
-        setMsg(signedTransaction)
+          const tronWeb = window.tronWeb;
+          const transaction = await tronWeb.transactionBuilder.sendToken("TVDGpn4hCSzJ5nkHPLetk8KQBtwaTppnkr", 100, "1002000", "TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL");
+          const signedTransaction = await tronWeb.trx.sign(transaction);
+          setMsg(signedTransaction)
         } catch(e) {
           console.warn(e)
           setMsg(e.message)

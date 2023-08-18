@@ -1,20 +1,19 @@
 
 import eruda from 'eruda';
 import './App.css'
-
 // tron
-import SendTrx from './components/SendTrx';
-import SendAsset from './components/SendAsset';
-import SendToken from './components/SendToken';
-import SignMessage from './components/signMessage';
-import SignMessageV2 from './components/signMessageV2';
-import MultiSign from './components/muiltSign';
-import TriggerSmartContract from './components/TriggerSmartContract';
-import Approve from './components/Approve';
-import FreezeBalance from './components/FreezeBalance'
-import FreezeBalanceV2 from './components/FreezeBalanceV2'
-import UpdateAccountPermissions from './components/UpdateAccountPermissions';
-import SendNFT from './components/SendNFT';
+import SendTrx from './tron/SendTrx';
+import SendAsset from './tron/SendAsset';
+import SendToken from './tron/SendToken';
+import SignMessage from './tron/signMessage';
+import SignMessageV2 from './tron/signMessageV2';
+import MultiSign from './tron/muiltSign';
+import TriggerSmartContract from './tron/TriggerSmartContract';
+import Approve from './tron/Approve';
+import FreezeBalance from './tron/FreezeBalance'
+import FreezeBalanceV2 from './tron/FreezeBalanceV2'
+import UpdateAccountPermissions from './tron/UpdateAccountPermissions';
+import SendNFT from './tron/SendNFT';
 // cosmos
 import Withdraw from './cosmos/Withdraw';
 import Delegate from './cosmos/Delegate';
