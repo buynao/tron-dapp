@@ -8,7 +8,7 @@ function SignMessage() {
       <Button onClick={async () => {
         const tronWeb = window.tronWeb;
         try {
-         const signature = await tronWeb.trx.sign('Hello Word') || '';
+         const signature = await tronWeb.trx.sign('Hello Word');
          setMsg(signature)
         } catch(e) {
           setMsg(e.message)

@@ -11,6 +11,7 @@ function SendAsset() {
           const transaction = await tronWeb.transactionBuilder.sendAsset("TVDGpn4hCSzJ5nkHPLetk8KQBtwaTppnkr", 100, "1002000", "TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL");
           const signedTransaction = tronWeb.trx.sign(transaction);
           tronWeb.trx.sendTransaction(signedTransaction);
+          setMsg(signedTransaction)
         } catch(e) {
           setMsg(e.message)
         }

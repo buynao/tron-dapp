@@ -25,7 +25,9 @@ import Send from './cosmos/Send';
 import Redelegate from './cosmos/Redelegate';
 import CreateDeposit from './cosmos/CreateDeposit';
 import CreateProposal from './cosmos/CreateProposal';
-
+// tezos
+import TezosDelegate from './tezos/Delegate';
+import TezosUnDelegate from './tezos/UnDelegate'
 function App() {
   return (
     <div>
@@ -60,6 +62,10 @@ function App() {
       <span style={{ fontSize: '12px' }}>(Staking DApp暂无调用时机)</span>
       <Send />
       <CreateProposal />
+      <div style={{ marginTop: 20 }} />
+      <h3>tezos<span style={{ fontSize: '12px' }}>(仅限imToken内使用)</span></h3>
+      <TezosDelegate />
+      <TezosUnDelegate />
     </div>
   )
 }

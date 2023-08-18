@@ -32,7 +32,7 @@ const imToken = window['imToken']
 
 export function getAccounts() {
   // return Promise.resolve(['cosmos1zt57jwmlfl77k9urjha2xupgpk2j90axd9pxss'])
-  return imToken.callPromisifyAPI('cosmos.getAccounts')
+  return imToken.callPromisifyAPI('tezos.getAccounts')
 }
 
 export function getProvider() {
@@ -48,7 +48,7 @@ export function navigatorConfigure(payload) {
 }
 
 export function sendTransaction(payload) {
-  return imToken.callPromisifyAPI('cosmos.sendTransaction', payload)
+  return imToken.callPromisifyAPI('tezos.sendTransaction', payload)
 }
 
 export function setTitle(title) {
