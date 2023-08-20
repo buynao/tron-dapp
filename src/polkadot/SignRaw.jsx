@@ -6,7 +6,6 @@ import { stringToHex } from "@polkadot/util";
 
 const SignRaw = () => {
   const [msg, setMsg] = useState('')
-  console.log(api.genesisHash.toHex());
 
   return <Button onClick={async () => {
       const allInjected = await web3Enable('my cool dapp');
