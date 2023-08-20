@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@polkadot/api": "^10.9.1",
+    "@polkadot/extension-dapp": "^0.46.5",
     "antd": "^5.8.3",
     "bignumber.js": "^9.1.1",
     "eruda": "^3.0.1",

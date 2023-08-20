@@ -8,7 +8,6 @@ function FreezeBalanceV2() {
       <Button onClick={async () => {
         const tronWeb = window.tronWeb;
         try {
-          const balance = await tronWeb.trx.getBalance(window.tronWeb.defaultAddress.hex)
           const tradeobj = await tronWeb.transactionBuilder.freezeBalanceV2(tronWeb.toSun(1),
             'BANDWIDTH',
             window.tronWeb.defaultAddress.hex,

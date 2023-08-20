@@ -27,6 +27,10 @@ import CreateProposal from './cosmos/CreateProposal';
 // tezos
 import TezosDelegate from './tezos/Delegate';
 import TezosUnDelegate from './tezos/UnDelegate'
+// polkadot
+import PolkadotSign from './polkadot/Sign'
+import PolkadotSignRaw from './polkadot/SignRaw'
+
 function App() {
   return (
     <div>
@@ -65,6 +69,10 @@ function App() {
       <h3>tezos<span style={{ fontSize: '12px' }}>(仅限imToken内使用)</span></h3>
       <TezosDelegate />
       <TezosUnDelegate />
+      <div style={{ marginTop: 20 }} />
+      <h3>polkadot</h3>
+      <PolkadotSign />
+      <PolkadotSignRaw />
     </div>
   )
 }
