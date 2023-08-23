@@ -1,22 +1,20 @@
 // Import
 import { Button, message } from 'antd';
 import { useState, useEffect } from 'react'
-import { web3Accounts, web3Enable, web3FromAddress } from '@polkadot/extension-dapp';
 import { getAPI, signAndSend } from './sdk';
 
-const Sign = ({ disabled }) => {
+const Nominate = ({ disabled }) => {
   const [msg, setMsg] = useState('')
   return <Button disabled={disabled} onClick={async () => {
       const api = getAPI()
-      if (api) {
       message.loading('发起App请求...')
-      const tx = api.tx.balances
-        .transfer('5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ', 123456)
-      signAndSend(tx)
-    } else {
+      if (api) {
+      const nominateTx = api.tx.staking.nominate(['5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ'])
+      signAndSend(nominateTx)
+      } else {
         message.error('api not ready...')
-    }
-  }}>SignTransfer</Button>
+      }
+  }}>Nominate</Button>
 }
 
-export default Sign
+export default Nominate

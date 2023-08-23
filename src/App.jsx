@@ -1,5 +1,6 @@
 
 import eruda from 'eruda';
+import { useState, useEffect } from 'react'
 import './App.css'
 // tron
 import SendTrx from './tron/SendTrx';
@@ -30,8 +31,32 @@ import TezosUnDelegate from './tezos/UnDelegate'
 // polkadot
 import PolkadotSign from './polkadot/Sign'
 import PolkadotSignRaw from './polkadot/SignRaw'
+import PolkadotNominate from './polkadot/Nominate'
+import PBond from './polkadot/Bond'
+import PUnbond from './polkadot/UnBond'
+import ExtraBond from './polkadot/ExtraBond'
+import BatchBondNominate from './polkadot/BatchBondNominate';
+import WithdrawUnbond from './polkadot/WithdrawUnbond';
+import { initClient } from './polkadot/sdk';
+import PayoutRewards from './polkadot/PayoutRewards'
+import Second from './polkadot/Second';
+import DemocracyVote from './polkadot/DemocracyVote';
+import CouncilVote from './polkadot/CouncilVote';
+// nervos
+import NervosTransfer from './nervos/Transfer'
+import NervosTransferNFT from './nervos/TransferNFT'
+// bitcoin
+import BTCTransfer from './bitcoin/Transfer'
+// eos
+import EOSVote from './eos/Vote'
+import Powerup from './eos/Powerup'
+import EOSSignMessage from './eos/SignMessage'
 
 function App() {
+  const [disabled, toggleDisabled] = useState(true)
+  useEffect(() => {
+    initClient(toggleDisabled)
+  }, [])
   return (
     <div>
       <h3>tron</h3>
@@ -70,9 +95,31 @@ function App() {
       <TezosDelegate />
       <TezosUnDelegate />
       <div style={{ marginTop: 20 }} />
-      <h3>polkadot</h3>
-      <PolkadotSign />
+      <h3>polkadot/kusama</h3>
+      <PolkadotSign disabled={disabled}/>
       <PolkadotSignRaw />
+      <PolkadotNominate disabled={disabled} />
+      <PBond disabled={disabled} />
+      <PUnbond disabled={disabled} />
+      <ExtraBond  disabled={disabled}  />
+      <BatchBondNominate disabled={disabled} />
+      <WithdrawUnbond disabled={disabled} />
+      <PayoutRewards disabled={disabled} />
+      <Second disabled={disabled} />
+      <DemocracyVote disabled={disabled} />
+      <CouncilVote disabled={disabled} />
+      <div style={{ marginTop: 20 }} />
+      <h3>nervos</h3>
+      <NervosTransfer />
+      <NervosTransferNFT />
+      <div style={{ marginTop: 20 }} />
+      <h3>bitcoin</h3>
+      <BTCTransfer />
+      <div style={{ marginTop: 20 }} />
+      <h3>eos</h3>
+      <EOSVote />
+      <Powerup />
+      <EOSSignMessage />
     </div>
   )
 }

@@ -1,16 +1,13 @@
 // Import
 import { Button } from 'antd';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { web3Accounts, web3Enable, web3FromSource } from '@polkadot/extension-dapp';
 import { stringToHex } from "@polkadot/util";
-
 const SignRaw = () => {
   const [msg, setMsg] = useState('')
 
   return <Button onClick={async () => {
-      const allInjected = await web3Enable('my cool dapp');
       const allAccounts = await web3Accounts();
-      console.log(">>>>>>>allAccounts", allAccounts)
       const account = allAccounts[0];
       const injector = await web3FromSource(account.meta.source);
       const signRaw = injector?.signer?.signRaw;
