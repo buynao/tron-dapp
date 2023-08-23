@@ -6,7 +6,7 @@ import BN from 'bn.js'
 
 const BatchBondNominate = ({ disabled }) => {
   const [msg, setMsg] = useState('')
-  return <Button disabled={disabled} onClick={async () => {
+  return <div><Button disabled={disabled} onClick={async () => {
       const api = getAPI()
       message.loading('发起App请求...')
       if (api) {
@@ -17,7 +17,7 @@ const BatchBondNominate = ({ disabled }) => {
       } else {
         message.error('api not ready...')
       }
-  }}>BatchBondNominate</Button>
+  }}>BatchBondNominate</Button></div>
 }
 
 export default BatchBondNominate

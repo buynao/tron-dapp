@@ -6,7 +6,7 @@ import BN from 'bn.js'
 
 const ExtraBond = ({ disabled }) => {
   const [msg, setMsg] = useState('')
-  return <Button disabled={disabled} onClick={async () => {
+  return <div><Button disabled={disabled} onClick={async () => {
       const api = getAPI()
       message.loading('发起App请求...')
       if (api) {
@@ -15,7 +15,7 @@ const ExtraBond = ({ disabled }) => {
       } else {
         message.error('api not ready...')
       }
-  }}>ExtraBond</Button>
+  }}>ExtraBond</Button></div>
 }
 
 export default ExtraBond

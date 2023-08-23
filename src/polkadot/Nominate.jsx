@@ -5,7 +5,7 @@ import { getAPI, signAndSend } from './sdk';
 
 const Nominate = ({ disabled }) => {
   const [msg, setMsg] = useState('')
-  return <Button disabled={disabled} onClick={async () => {
+  return <div><Button disabled={disabled} onClick={async () => {
       const api = getAPI()
       message.loading('发起App请求...')
       if (api) {
@@ -14,7 +14,7 @@ const Nominate = ({ disabled }) => {
       } else {
         message.error('api not ready...')
       }
-  }}>Nominate</Button>
+  }}>Nominate</Button></div>
 }
 
 export default Nominate

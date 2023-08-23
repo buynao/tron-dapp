@@ -6,7 +6,7 @@ import { web3Accounts, web3Enable, web3FromSource } from '@polkadot/extension-da
 
 const PayoutRewards = ({ disabled }) => {
   const [msg, setMsg] = useState('')
-  return <Button disabled={true} onClick={async () => {
+  return <div><Button disabled={true} onClick={async () => {
       const api = getAPI()
       message.loading('发起App请求...')
       if (api) {
@@ -22,7 +22,7 @@ const PayoutRewards = ({ disabled }) => {
       } else {
         message.error('api not ready...')
       }
-  }}>PayoutRewards</Button>
+  }}>PayoutRewards</Button></div>
 }
 
 export default PayoutRewards

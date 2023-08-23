@@ -1,15 +1,18 @@
 import { useState } from 'react'
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { imToken } from '../sdk'
 
 function Transfer() {
   const [msg, setMsg] = useState('')
+  const [loading, setLoading] = useState(false)
   return (
     <div>
-      <Button onClick={async () => {
+      <Button loading={loading} onClick={async () => {
         try {
+          message.info("发起交易中...")
+          setLoading(true)
           console.log(imToken)
-          imToken.callPromisifyAPI('eos.signTransaction', {
+          const result = await imToken.callPromisifyAPI('eos.signTransaction', {
     "signargs": {
         "chainId": "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906",
         "requiredKeys": [
@@ -73023,9 +73026,12 @@ function Transfer() {
             "txObject": {},
             "chainId": "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906",
             "broadcast": false
-          })
+          })          
+          setMsg(result)
+          setLoading(false)
         } catch(e) {
           console.warn(e)
+          setLoading(false)
           setMsg(e.message)
         }
       }}>Transfer: {msg}</Button>

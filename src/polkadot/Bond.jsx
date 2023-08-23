@@ -6,7 +6,7 @@ import BN from 'bn.js'
 
 const Bond = ({ disabled }) => {
   const [msg, setMsg] = useState('')
-  return <Button disabled={disabled} onClick={async () => {
+  return <div><Button disabled={disabled} onClick={async () => {
       const api = getAPI()
       message.loading('发起App请求...')
       if (api) {
@@ -15,7 +15,7 @@ const Bond = ({ disabled }) => {
       } else {
         message.error('api not ready...')
       }
-  }}>Bond</Button>
+  }}>Bond</Button></div>
 }
 
 export default Bond

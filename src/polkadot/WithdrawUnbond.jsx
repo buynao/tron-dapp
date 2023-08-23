@@ -6,7 +6,7 @@ import BN from 'bn.js'
 
 const WithdrawUnbond = ({ disabled }) => {
   const [msg, setMsg] = useState('')
-  return <Button disabled={disabled} onClick={async () => {
+  return <div><Button disabled={disabled} onClick={async () => {
       const api = getAPI()
       message.loading('发起App请求...')
       if (api) {
@@ -15,7 +15,7 @@ const WithdrawUnbond = ({ disabled }) => {
       } else {
         message.error('api not ready...')
       }
-  }}>WithdrawUnbond</Button>
+  }}>WithdrawUnbond</Button></div>
 }
 
 export default WithdrawUnbond

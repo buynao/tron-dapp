@@ -6,7 +6,7 @@ import { getAPI, signAndSend } from './sdk';
 
 const Sign = ({ disabled }) => {
   const [msg, setMsg] = useState('')
-  return <Button disabled={disabled} onClick={async () => {
+  return <div><Button disabled={disabled} onClick={async () => {
       const api = getAPI()
       if (api) {
       message.loading('发起App请求...')
@@ -16,7 +16,7 @@ const Sign = ({ disabled }) => {
     } else {
         message.error('api not ready...')
     }
-  }}>SignTransfer</Button>
+  }}>SignTransfer</Button></div>
 }
 
 export default Sign

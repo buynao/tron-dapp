@@ -1,15 +1,17 @@
 import { useState } from 'react'
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { imToken } from '../sdk'
 
 function Powerup() {
   const [msg, setMsg] = useState('')
+  const [loading, setLoading] = useState(false)
   return (
     <div>
-      <Button onClick={async () => {
+      <Button loading={loading} onClick={async () => {
         try {
-          console.log(imToken)
-          imToken.callPromisifyAPI('eos.signTransaction', {
+          message.info("发起交易中...")
+          setLoading(true)
+          const result = await imToken.callPromisifyAPI('eos.signTransaction', {
             "signargs": {
                 "chainId": "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906",
                 "requiredKeys": [
@@ -72972,7 +72974,10 @@ function Powerup() {
             "chainId": "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906",
             "broadcast": false
         })
+          setMsg(result)
+          setLoading(false)
         } catch(e) {
+          setLoading(false)
           console.warn(e)
           setMsg(e.message)
         }

@@ -1,15 +1,18 @@
 import { useState } from 'react'
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { imToken } from '../sdk'
 
 function TransferNFT() {
   const [msg, setMsg] = useState('')
+  const [loading, setLoading] = useState(false)
   return (
     <div>
-      <Button onClick={async () => {
+      <Button loading={loading} onClick={async () => {
         try {
+          message.info("发起交易中...")
+          setLoading(true)
           console.log(imToken)
-          imToken.callPromisifyAPI('nervos.signTransaction', {
+          const result = await imToken.callPromisifyAPI('nervos.signTransaction', {
             "version": "0x0",
             "cell_deps": [
                 {
@@ -59,9 +62,12 @@ function TransferNFT() {
                 "0x55000000100000005500000055000000410000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
             ]
         })
+        setMsg(result)
+          setLoading(false)
         } catch(e) {
           console.warn(e)
           setMsg(e.message)
+          setLoading(false)
         }
       }}>TransferNFT: {msg}</Button>
     </div>

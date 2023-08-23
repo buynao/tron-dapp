@@ -6,7 +6,7 @@ import BN from 'bn.js'
 
 const democracy = ({ disabled }) => {
   const [msg, setMsg] = useState('')
-  return <Button disabled={disabled} onClick={async () => {
+  return <div><Button disabled={disabled} onClick={async () => {
       const api = getAPI()
       message.loading('发起App请求...')
       if (api) {
@@ -21,7 +21,7 @@ const democracy = ({ disabled }) => {
       } else {
         message.error('api not ready...')
       }
-  }}>DemocracyVote</Button>
+  }}>DemocracyVote</Button></div>
 }
 
 export default democracy

@@ -5,7 +5,7 @@ import { getAPI, signAndSend } from './sdk';
 
 const CouncilVote = ({ disabled }) => {
   const [msg, setMsg] = useState('')
-  return <Button disabled={disabled} onClick={async () => {
+  return <div><Button disabled={disabled} onClick={async () => {
       const api = getAPI()
       message.loading('发起App请求...')
       if (api) {
@@ -14,7 +14,7 @@ const CouncilVote = ({ disabled }) => {
       } else {
         message.error('api not ready...')
       }
-  }}>CouncilVote</Button>
+  }}>CouncilVote</Button></div>
 }
 
 export default CouncilVote

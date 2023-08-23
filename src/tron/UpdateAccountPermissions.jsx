@@ -1,13 +1,16 @@
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { useState } from 'react';
 
 function UpdateAccountPermissions() {
   const [msg, setMsg] = useState('')
+  const [loading, setLoading] = useState(false)
   return (
     <div>
-      <Button onClick={async () => {
+      <Button loading={loading}  onClick={async () => {
         const tronWeb = window.tronWeb;
         try {
+          message.info("发起交易中...")
+          setLoading(true)
           let ownerAddress = window.tronWeb.defaultAddress.hex;
           let ownerPermission = { type: 0, permission_name: 'owner' };
           ownerPermission.threshold = 1;
@@ -25,9 +28,11 @@ function UpdateAccountPermissions() {
         const updateTransaction = await tronWeb.transactionBuilder.updateAccountPermissions(ownerAddress, ownerPermission, null, [activePermission]);
         const signature = await tronWeb.trx.sign(updateTransaction)
          setMsg(signature)
+        setLoading(false)
         } catch(e) {
           console.log(">>>>>>e", e) 
           setMsg(e.message)
+          setLoading(false)
         }
       }}>UpdateAccountPermissions:{msg}</Button>
     </div>

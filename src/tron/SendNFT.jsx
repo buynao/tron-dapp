@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 function SendNFT() {
   return (
     <div>
@@ -7,6 +7,8 @@ function SendNFT() {
         onClick={async () => {
           const tronWeb = window.tronWeb;
           try {
+          message.info("发起交易中...")
+          setLoading(true)
             const trc721ContractAddress = "TRio4FwnDvtYN2ogss6Qm7Hn2EaTLwWMNs";//contract address
             console.log(">>>>>>>>trc721ContractAddress", trc721ContractAddress)
             let contract = await tronWeb.contract().at(trc721ContractAddress);

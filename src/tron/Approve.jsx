@@ -1,13 +1,16 @@
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { useState } from 'react';
 
 function Approve() {
   const [msg, setMsg] = useState('')
+  const [loading, setLoading] = useState(false)
   return (
     <div>
-      <Button onClick={async () => {
+      <Button loading={loading}  onClick={async () => {
         const tronWeb = window.tronWeb;
         try {
+          message.info("发起交易中...")
+          setLoading(true)
          const signature = await tronWeb.trx.sign({
           "visible": false,
           "txID": "da3684a5f38f5c0e6b1fedb3405195485ffe73b03783517948f1d74a5a993dfc",
@@ -34,8 +37,10 @@ function Approve() {
           "raw_data_hex": "0a021cf02208a1cbe4b90d72177e40e0f7f692a0315aae01081f12a9010a31747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e54726967676572536d617274436f6e747261637412740a15419b796e0e2412e4f0cabd922fb3ef9f8e99f5ad80121541a614f803b6fd780986a42c78ec9c7f77e6ded13c2244095ea7b30000000000000000000000003c9e0ac33f138216c50638d71c344a299d0d1030ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff7099b0f392a031900180e59a77"
         });
          setMsg(signature)
+        setLoading(false)
         } catch(e) {
           setMsg(e.message)
+          setLoading(false)
         }
       }}>Approve:{msg}</Button>
     </div>

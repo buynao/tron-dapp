@@ -86,10 +86,11 @@ function App() {
       <ReinvestRewards />
       <Vote />
       <CreateDeposit />
-      <div style={{ marginTop: 20 }} />
-      <span style={{ fontSize: '12px' }}>(Staking DApp暂无调用时机)</span>
+      <div style={{ marginTop: 20 }}>
+       <div><span style={{ fontSize: '12px' }}>(Staking DApp暂无调用时机)</span></div>
       <Send />
       <CreateProposal />
+      </div>
       <div style={{ marginTop: 20 }} />
       <h3>tezos<span style={{ fontSize: '12px' }}>(仅限imToken内使用)</span></h3>
       <TezosDelegate />

@@ -1,15 +1,18 @@
 import { useState } from 'react'
-import { Button } from 'antd';
+import { Button, message } from 'antd';
 import { imToken } from '../sdk'
 
 function Transfer() {
   const [msg, setMsg] = useState('')
+  const [loading, setLoading] = useState(false)
   return (
     <div>
-      <Button onClick={async () => {
+      <Button loading={loading} onClick={async () => {
         try {
+          message.info("发起交易中...")
+          setLoading(true)
           console.log(imToken)
-          imToken.callPromisifyAPI('nervos.signTransaction', {
+          const result = await imToken.callPromisifyAPI('nervos.signTransaction', {
             "version": "0x0",
             "inputs": [
                 {
@@ -60,10 +63,13 @@ function Transfer() {
                 "0x"
             ],
             "witnesses": []
-        })
+        }) 
+        setMsg(result)
+          setLoading(false)
         } catch(e) {
           console.warn(e)
           setMsg(e.message)
+          setLoading(false)
         }
       }}>Transfer: {msg}</Button>
     </div>
