@@ -15,6 +15,10 @@ import FreezeBalance from './tron/FreezeBalance'
 import FreezeBalanceV2 from './tron/FreezeBalanceV2'
 import UpdateAccountPermissions from './tron/UpdateAccountPermissions';
 import SendNFT from './tron/SendNFT';
+import ApproveUnimite from './tron/ApproveUnimite';
+import ApproveRevoke from './tron/ApproveRevoke';
+import DecreaseApprove from './tron/DecreaseApprove';
+import IncreaseApprove from './tron/IncreaseApprove';
 // cosmos
 import Withdraw from './cosmos/Withdraw';
 import Delegate from './cosmos/Delegate';
@@ -51,7 +55,7 @@ import BTCTransfer from './bitcoin/Transfer'
 import EOSVote from './eos/Vote'
 import Powerup from './eos/Powerup'
 import EOSSignMessage from './eos/SignMessage'
-
+import EOSTransfer from './eos/Transfer';
 function App() {
   const [disabled, toggleDisabled] = useState(true)
   useEffect(() => {
@@ -72,6 +76,10 @@ function App() {
       <div style={{ marginTop: 20 }} />
       <TriggerSmartContract />
       <Approve />
+      <ApproveUnimite />
+      <ApproveRevoke />
+      <IncreaseApprove />
+      <DecreaseApprove />
       <div style={{ marginTop: 20 }} />
       <FreezeBalance />
       <FreezeBalanceV2 />
@@ -121,6 +129,7 @@ function App() {
       <EOSVote />
       <Powerup />
       <EOSSignMessage />
+      <EOSTransfer />
     </div>
   )
 }

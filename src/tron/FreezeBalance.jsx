@@ -18,7 +18,6 @@ function FreezeBalance() {
             3,
             "ENERGY",
             window.tronWeb.defaultAddress.hex,
-            window.tronWeb.defaultAddress.hex,
             1
           )
          

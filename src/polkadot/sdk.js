@@ -45,7 +45,7 @@ export const initClient = async (toggleDisabled) => {
   return api
 }
 export const signAndSend = async (tx) => {
-  await web3Enable('init')
+  // await web3Enable('init')
   const allAccounts = await web3Accounts();
   const account = allAccounts[0];
   const injected = await web3FromSource(account.meta.source)
