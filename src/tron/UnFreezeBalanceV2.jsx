@@ -1,7 +1,7 @@
 import { Button, message } from 'antd';
 import { useState } from 'react';
 
-function FreezeBalanceV2() {
+function UnFreezeBalanceV2() {
   const [msg, setMsg] = useState('')
   const [loading, setLoading] = useState(false)
   return (
@@ -12,7 +12,7 @@ function FreezeBalanceV2() {
           message.info("发起交易中...")
           setLoading(true)
           console.log(">>>>window.tronWeb.defaultAddress.hex", window.tronWeb.defaultAddress.hex)
-          const tradeobj = await tronWeb.transactionBuilder.freezeBalanceV2(tronWeb.toSun(1),
+          const tradeobj = await tronWeb.transactionBuilder.unfreezeBalanceV2(tronWeb.toSun(1),
             'BANDWIDTH',
             window.tronWeb.defaultAddress.hex,
             1
@@ -25,9 +25,9 @@ function FreezeBalanceV2() {
           setMsg(e.message)
           setLoading(false)
         }
-      }}>FreezeBalanceV2:{msg}</Button>
+      }}>UnFreezeBalanceV2:{msg}</Button>
     </div>
   )
 }
 
-export default FreezeBalanceV2
+export default UnFreezeBalanceV2

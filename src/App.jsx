@@ -9,10 +9,12 @@ import SendToken from './tron/SendToken';
 import SignMessage from './tron/signMessage';
 import SignMessageV2 from './tron/signMessageV2';
 import MultiSign from './tron/muiltSign';
+import MultiAction from './tron/MultiAction';
 import TriggerSmartContract from './tron/TriggerSmartContract';
 import Approve from './tron/Approve';
 import FreezeBalance from './tron/FreezeBalance'
 import FreezeBalanceV2 from './tron/FreezeBalanceV2'
+import UnFreezeBalanceV2 from './tron/UnFreezeBalanceV2'
 import UpdateAccountPermissions from './tron/UpdateAccountPermissions';
 import SendNFT from './tron/SendNFT';
 import ApproveUnimite from './tron/ApproveUnimite';
@@ -73,6 +75,7 @@ function App() {
       <SignMessageV2 />
       <div style={{ marginTop: 20 }} />
       <MultiSign />
+      <MultiAction />
       <div style={{ marginTop: 20 }} />
       <TriggerSmartContract />
       <Approve />
@@ -83,6 +86,7 @@ function App() {
       <div style={{ marginTop: 20 }} />
       <FreezeBalance />
       <FreezeBalanceV2 />
+      <UnFreezeBalanceV2 />
       <div style={{ marginTop: 20 }} />
       <UpdateAccountPermissions />
       <div style={{ marginTop: 20 }} />
