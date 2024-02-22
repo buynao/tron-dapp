@@ -1,7 +1,6 @@
-
 import eruda from 'eruda';
-import { useState, useEffect } from 'react'
-import './App.css'
+import { useState, useEffect } from 'react';
+import './App.css';
 // tron
 import SendTrx from './tron/SendTrx';
 import SendAsset from './tron/SendAsset';
@@ -12,9 +11,9 @@ import MultiSign from './tron/muiltSign';
 import MultiAction from './tron/MultiAction';
 import TriggerSmartContract from './tron/TriggerSmartContract';
 import Approve from './tron/Approve';
-import FreezeBalance from './tron/FreezeBalance'
-import FreezeBalanceV2 from './tron/FreezeBalanceV2'
-import UnFreezeBalanceV2 from './tron/UnFreezeBalanceV2'
+import FreezeBalance from './tron/FreezeBalance';
+import FreezeBalanceV2 from './tron/FreezeBalanceV2';
+import UnFreezeBalanceV2 from './tron/UnFreezeBalanceV2';
 import UpdateAccountPermissions from './tron/UpdateAccountPermissions';
 import SendNFT from './tron/SendNFT';
 import ApproveUnimite from './tron/ApproveUnimite';
@@ -33,36 +32,37 @@ import CreateDeposit from './cosmos/CreateDeposit';
 import CreateProposal from './cosmos/CreateProposal';
 // tezos
 import TezosDelegate from './tezos/Delegate';
-import TezosUnDelegate from './tezos/UnDelegate'
+import TezosUnDelegate from './tezos/UnDelegate';
 // polkadot
-import PolkadotSign from './polkadot/Sign'
-import PolkadotSignRaw from './polkadot/SignRaw'
-import PolkadotNominate from './polkadot/Nominate'
-import PBond from './polkadot/Bond'
-import PUnbond from './polkadot/UnBond'
-import ExtraBond from './polkadot/ExtraBond'
+import PolkadotSign from './polkadot/Sign';
+import PolkadotSignRaw from './polkadot/SignRaw';
+import PolkadotNominate from './polkadot/Nominate';
+import PBond from './polkadot/Bond';
+import PUnbond from './polkadot/UnBond';
+import ExtraBond from './polkadot/ExtraBond';
 import BatchBondNominate from './polkadot/BatchBondNominate';
 import WithdrawUnbond from './polkadot/WithdrawUnbond';
 import { initClient } from './polkadot/sdk';
-import PayoutRewards from './polkadot/PayoutRewards'
+import PayoutRewards from './polkadot/PayoutRewards';
 import Second from './polkadot/Second';
 import DemocracyVote from './polkadot/DemocracyVote';
 import CouncilVote from './polkadot/CouncilVote';
 // nervos
-import NervosTransfer from './nervos/Transfer'
-import NervosTransferNFT from './nervos/TransferNFT'
+import NervosTransfer from './nervos/Transfer';
+import NervosTransferNFT from './nervos/TransferNFT';
 // bitcoin
-import BTCTransfer from './bitcoin/Transfer'
+import BTCTransfer from './bitcoin/Transfer';
 // eos
-import EOSVote from './eos/Vote'
-import Powerup from './eos/Powerup'
-import EOSSignMessage from './eos/SignMessage'
+import EOSVote from './eos/Vote';
+import Powerup from './eos/Powerup';
+import EOSSignMessage from './eos/SignMessage';
 import EOSTransfer from './eos/Transfer';
+
 function App() {
-  const [disabled, toggleDisabled] = useState(true)
+  const [disabled, toggleDisabled] = useState(true);
   useEffect(() => {
-    initClient(toggleDisabled)
-  }, [])
+    initClient(toggleDisabled);
+  }, []);
   return (
     <div>
       <h3>tron</h3>
@@ -90,7 +90,9 @@ function App() {
       <div style={{ marginTop: 20 }} />
       <UpdateAccountPermissions />
       <div style={{ marginTop: 20 }} />
-      <h3>cosmos<span style={{ fontSize: '12px' }}>(仅限imToken内使用)</span></h3>
+      <h3>
+        cosmos<span style={{ fontSize: '12px' }}>(仅限imToken内使用)</span>
+      </h3>
       <Withdraw />
       <Delegate />
       <Redelegate />
@@ -99,22 +101,26 @@ function App() {
       <Vote />
       <CreateDeposit />
       <div style={{ marginTop: 20 }}>
-       <div><span style={{ fontSize: '12px' }}>(Staking DApp暂无调用时机)</span></div>
-      <Send />
-      <CreateProposal />
+        <div>
+          <span style={{ fontSize: '12px' }}>(Staking DApp暂无调用时机)</span>
+        </div>
+        <Send />
+        <CreateProposal />
       </div>
       <div style={{ marginTop: 20 }} />
-      <h3>tezos<span style={{ fontSize: '12px' }}>(仅限imToken内使用)</span></h3>
+      <h3>
+        tezos<span style={{ fontSize: '12px' }}>(仅限imToken内使用)</span>
+      </h3>
       <TezosDelegate />
       <TezosUnDelegate />
       <div style={{ marginTop: 20 }} />
       <h3>polkadot/kusama</h3>
-      <PolkadotSign disabled={disabled}/>
+      <PolkadotSign disabled={disabled} />
       <PolkadotSignRaw />
       <PolkadotNominate disabled={disabled} />
       <PBond disabled={disabled} />
       <PUnbond disabled={disabled} />
-      <ExtraBond  disabled={disabled}  />
+      <ExtraBond disabled={disabled} />
       <BatchBondNominate disabled={disabled} />
       <WithdrawUnbond disabled={disabled} />
       <PayoutRewards disabled={disabled} />
@@ -135,9 +141,9 @@ function App() {
       <EOSSignMessage />
       <EOSTransfer />
     </div>
-  )
+  );
 }
 
-eruda.init()
+eruda.init();
 
-export default App
+export default App;
