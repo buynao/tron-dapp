@@ -34,22 +34,22 @@ function Powerup() {
           }
         }}
       >
-        signMessage
+        SignMessage
       </Button>
       {msg && <Input value={msg} disabled={true} />}
       {msg && (
         <Button
           onClick={() => {
-            const recoverResult = ecc.verify(msg, 'test data', pubkey);
-            console.log('>>>>>>>>>>recoverResult', recoverResult);
+            const recoverPublickey = ecc.recover(msg, 'test data');
+            console.log('>>>>>>>>>>recoverPublickey', recoverPublickey);
             if (recoverResult) {
               message.success('签名结果匹配');
               return;
             }
-            message.error('签名结果不匹配...');
+            message.error(`签名结果不匹配...${recoverPublickey}`);
           }}
         >
-          verify
+          verify signMessage
         </Button>
       )}
     </div>
