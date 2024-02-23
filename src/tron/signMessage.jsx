@@ -20,7 +20,8 @@ function SignMessage() {
             message.info('发起交易中...');
             setLoading(true);
             setMsg('');
-            const signature = await tronWeb.trx.sign(str);
+            const signature = await tronWeb.trx.sign(strHash);
+            console.log('>>>>>>>>>signature', signature);
             let signedStr = signature.replace(/^0x/, '');
             let tail = signedStr.substring(128, 130);
             if (tail == '01') {
@@ -28,6 +29,7 @@ function SignMessage() {
             } else if (tail == '00') {
               signedStr = signedStr.substring(0, 128) + '1b';
             }
+            console.log('>>>>>>>>>signedStr', signedStr);
 
             setMsg(signedStr);
             setLoading(false);
