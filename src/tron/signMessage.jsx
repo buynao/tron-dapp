@@ -8,7 +8,8 @@ function SignMessage() {
   const str = 'helloworld';
   const hexStrWithout0x = tronWeb?.toHex?.(str).replace?.(/^0x/, '');
   const byteArray = tronWeb?.utils?.code?.hexStr2byteArray?.(hexStrWithout0x);
-  const strHash = tronWeb?.sha3(byteArray)?.replace?.(/^0x/, '');
+  const strHash = tronWeb?.sha3(byteArray);
+  const strHashWithout0x = tronWeb?.sha3(byteArray)?.replace?.(/^0x/, '');
   const defaultAddress = tronWeb?.defaultAddress.base58;
 
   return (
