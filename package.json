@@ -13,6 +13,7 @@
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@polkadot/api": "^10.9.1",
     "@polkadot/extension-dapp": "^0.46.5",
+    "@rollup/plugin-inject": "^5.0.5",
     "antd": "^5.8.3",
     "assert": "^2.1.0",
     "bignumber.js": "^9.1.1",
