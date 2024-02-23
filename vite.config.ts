@@ -12,11 +12,6 @@ export default defineConfig({
       stream: 'stream-browserify',
     },
   },
-  build: {
-    commonjsOptions: {
-      transformMixedEsModules: true,
-    },
-  },
   optimizeDeps: {
     esbuildOptions: {
       // Node.js global to browser globalThis
