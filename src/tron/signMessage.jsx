@@ -46,6 +46,9 @@ function SignMessage() {
         <Button
           onClick={async () => {
             try {
+              console.log('>>>>>>>>>>strHash', strHash);
+              console.log('>>>>>>>>>>msg', msg);
+              console.log('>>>>>>>>>>defaultAddress', defaultAddress);
               const res = await tronWeb.trx.verifyMessage(
                 strHash,
                 msg,
