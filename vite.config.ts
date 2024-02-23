@@ -6,13 +6,6 @@ import inject from '@rollup/plugin-inject';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  resolve: {
-    alias: {
-      crypto: 'crypto-browserify',
-      events: 'rollup-plugin-node-polyfills/polyfills/events',
-      stream: 'stream-browserify',
-    },
-  },
   build: {
     rollupOptions: {
       plugins: [inject({ Buffer: ['buffer', 'Buffer'] })],
