@@ -60,11 +60,26 @@ import EOSTransfer from './eos/Transfer';
 
 function App() {
   const [disabled, toggleDisabled] = useState(true);
+  const [location, setLocation] = useState('获取中...');
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocation(
+          `纬度: ${position.coords.latitude}, 经度: ${position.coords.longitude}`,
+        );
+      },
+      (error) => {
+        setLocation(`获取位置失败: ${error.message}`);
+      },
+    );
+  }, []);
   useEffect(() => {
     initClient(toggleDisabled);
   }, []);
   return (
     <div>
+      <p>当前地理位置：{location}</p>
       <h3>tron</h3>
       <SendTrx />
       <SendAsset />
