@@ -9,7 +9,6 @@ import SignMessage from './tron/signMessage';
 import SignMessageV2 from './tron/signMessageV2';
 import MultiSign from './tron/muiltSign';
 import MultiAction from './tron/MultiAction';
-import MultiActionFreeze from './tron/MultiActionUnfreeze';
 // 新增的多合约组合组件
 import MultiActionDecreaseApprove from './tron/MultiActionDecreaseApprove';
 import MultiActionIncreaseApprove from './tron/MultiActionIncreaseApprove';
@@ -17,6 +16,7 @@ import MultiActionSmartContract from './tron/MultiActionSmartContract';
 import MultiActionTrxUnfreeze from './tron/MultiActionTrxUnfreeze';
 import MultiActionApproveTrx from './tron/MultiActionApproveTrx';
 import MultiActionTokenUnfreeze from './tron/MultiActionTokenUnfreeze';
+import MultiActionApproveEOA from './tron/MultiActionApproveEOA';
 import TronAction from './tron/TronAction';
 import TriggerSmartContract from './tron/TriggerSmartContract';
 import Approve from './tron/Approve';
@@ -29,6 +29,7 @@ import ApproveUnimite from './tron/ApproveUnimite';
 import ApproveRevoke from './tron/ApproveRevoke';
 import DecreaseApprove from './tron/DecreaseApprove';
 import IncreaseApprove from './tron/IncreaseApprove';
+import MultiActionFreeze from './tron/MultiActionFreezeToken';
 // cosmos
 import Withdraw from './cosmos/Withdraw';
 import Delegate from './cosmos/Delegate';
@@ -66,6 +67,12 @@ import EOSVote from './eos/Vote';
 import Powerup from './eos/Powerup';
 import EOSSignMessage from './eos/SignMessage';
 import EOSTransfer from './eos/Transfer';
+// 新增的 ABI 合约组合
+import MultiActionFreezeToken from './tron/MultiActionFreezeToken';
+// 新增的 ABI 合约组合
+import MultiActionNormalABI from './tron/MultiActionNormalABI';
+import MultiActionABITransfer from './tron/MultiActionABITransfer';
+import MultiActionABIABI from './tron/MultiActionABIABI';
 
 function App() {
   const [disabled] = useState(true);
@@ -96,10 +103,30 @@ function App() {
         </div>
         <MultiAction />
         <MultiActionFreeze />
+
+        <div style={{ marginTop: '20px', marginBottom: '10px' }}>
+          <strong>授权相关组合:</strong>
+        </div>
         <MultiActionDecreaseApprove />
         <MultiActionIncreaseApprove />
         <MultiActionApproveTrx />
+        <MultiActionApproveEOA />
+        <div style={{ marginTop: '20px', marginBottom: '10px' }}>
+          <strong>智能合约组合:</strong>
+        </div>
         <MultiActionSmartContract />
+
+        <div style={{ marginTop: '20px', marginBottom: '10px' }}>
+          <strong>ABI 合约高级组合:</strong>
+        </div>
+        <MultiActionNormalABI />
+        <MultiActionABITransfer />
+        <MultiActionABIABI />
+
+        <div style={{ marginTop: '20px', marginBottom: '10px' }}>
+          <strong>质押/解冻组合:</strong>
+        </div>
+        <MultiActionFreezeToken />
         <MultiActionTrxUnfreeze />
         <MultiActionTokenUnfreeze />
       </div>
