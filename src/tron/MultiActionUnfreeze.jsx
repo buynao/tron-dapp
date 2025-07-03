@@ -1,45 +1,48 @@
 import { Button, message } from 'antd';
 import { useState } from 'react';
 
-// 常量配置
+// 常量配置 - FreezeBalance + Transfer 场景
 const CONTRACTS = {
-  USDT: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',
-  TARGET_ADDRESS: 'TDgJmYStKqzawFQyMav8XxNp1pTpdhEWg9',
+  USDT: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t', // USDT 合约地址
+  SYSTEM: 'T9yD14Nj9j7xAB4dbGeiX9h8unkKHxuWwb', // System contract
   FROM_ADDRESS: 'TKMBdaT5E5e4X3qtff3aY2ain5pG5WNPL2',
-  TOKEN_ADDRESS: 'TVDGpn4hCSzJ5nkHPLetk8KQBtwaTppnkr',
   RECIPIENT_ADDRESS: 'TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL',
 };
 
 const TRANSACTION_PARAMS = {
-  TOKEN_AMOUNT: 100,
-  TOKEN_ID: '1002000',
-  APPROVE_AMOUNT: 100000000,
+  FREEZE_AMOUNT: 100000000, // 100 TRX in SUN for freezing
+  TRANSFER_AMOUNT: 1000000, // 50 TRX in SUN
+  RESOURCE_TYPE: 'ENERGY', // ENERGY or BANDWIDTH
 };
 
-function MultiAction() {
+function MultiActionFreeze() {
   const [resultMessage, setResultMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 创建转账交易
-  const createTransferTransaction = async (tronWeb) => {
-    return await tronWeb.transactionBuilder.sendToken(
-      CONTRACTS.TOKEN_ADDRESS,
-      TRANSACTION_PARAMS.TOKEN_AMOUNT,
-      TRANSACTION_PARAMS.TOKEN_ID,
-      CONTRACTS.RECIPIENT_ADDRESS,
+  // 创建质押交易 - 使用固定合约结构
+  const createFreezeTransaction = async (tronWeb) => {
+    // 直接构造 FreezeBalanceV2Contract 结构
+    const freeze = await tronWeb.transactionBuilder.freezeBalanceV2(
+      tronWeb.toSun(1),
+      'BANDWIDTH',
+      window.tronWeb.defaultAddress.hex,
+      1,
     );
+    console.log('>>> freeze', freeze);
+
+    return { transaction: freeze };
   };
 
-  // 创建授权交易
-  const createApproveTransaction = async (tronWeb) => {
+  // 创建智能合约转账交易
+  const createTransferTransaction = async (tronWeb) => {
     const parameter = [
-      { type: 'address', value: CONTRACTS.TARGET_ADDRESS },
-      { type: 'uint256', value: TRANSACTION_PARAMS.APPROVE_AMOUNT },
+      { type: 'address', value: CONTRACTS.RECIPIENT_ADDRESS },
+      { type: 'uint256', value: TRANSACTION_PARAMS.TRANSFER_AMOUNT },
     ];
 
     return await tronWeb.transactionBuilder.triggerSmartContract(
-      CONTRACTS.USDT,
-      'approve(address,uint256)',
+      CONTRACTS.USDT, // 使用 USDT 合约
+      'transfer(address,uint256)', // 转账方法
       {},
       parameter,
       CONTRACTS.FROM_ADDRESS,
@@ -47,16 +50,16 @@ function MultiAction() {
   };
 
   // 合并交易
-  const mergeTransactions = (approveTransaction, transferTransaction) => {
-    // 保存原始合约信息
+  const mergeTransactions = (freezeTransaction, transferTransaction) => {
+    // 保存原始合约信息 - 现在两个交易都是 { transaction: {...} } 结构
     const originalContract =
-      approveTransaction.transaction.raw_data.contract[1];
+      transferTransaction.transaction.raw_data.contract[0];
 
-    // 将转账交易添加到授权交易中
-    approveTransaction.transaction.raw_data.contract[1] =
-      transferTransaction.raw_data.contract[0];
+    // 将转账交易添加到质押交易中
+    transferTransaction.transaction.raw_data.contract[1] =
+      freezeTransaction.transaction.raw_data.contract[0];
 
-    return { mergedTransaction: approveTransaction, originalContract };
+    return { mergedTransaction: transferTransaction, originalContract };
   };
 
   // 签名并发送交易
@@ -66,10 +69,10 @@ function MultiAction() {
     originalContract,
   ) => {
     console.log(
-      '>>> MultiAction signAndSendTransaction',
-      mergedTransaction.transaction,
+      '>>> signAndSendTransaction MultiActionUnfreeze',
+      mergedTransaction,
     );
-    // 签名交易
+    // 签名交易 - mergedTransaction 现在是 { transaction: {...} } 格式
     const signedTransaction = await tronWeb.trx.sign(
       mergedTransaction.transaction,
     );
@@ -90,31 +93,34 @@ function MultiAction() {
     }
 
     try {
-      message.info('创建交易中...');
+      message.info('创建质押 + Transfer 交易中...');
 
       // 并行创建两个交易
-      const [transferTransaction, approveTransaction] = await Promise.all([
+      const [freezeTransaction, transferTransaction] = await Promise.all([
+        createFreezeTransaction(tronWeb),
         createTransferTransaction(tronWeb),
-        createApproveTransaction(tronWeb),
       ]);
+      console.log('>>> freezeTransaction', freezeTransaction);
+      console.log('>>> transferTransaction', transferTransaction);
 
       message.info('合并交易中...');
       const { mergedTransaction, originalContract } = mergeTransactions(
-        approveTransaction,
+        freezeTransaction,
         transferTransaction,
       );
+      console.log('>>> mergedTransaction', mergedTransaction);
 
-      message.info('签名并发送交易中...');
+      message.info('签名并发送交易中...', mergedTransaction);
       const result = await signAndSendTransaction(
         tronWeb,
         mergedTransaction,
         originalContract,
       );
 
-      console.log('交易结果:', result);
+      console.log('质押 + Transfer 交易结果:', result);
       return result;
     } catch (error) {
-      console.error('交易执行失败:', error);
+      console.error('质押 + Transfer 交易执行失败:', error);
       throw error;
     }
   };
@@ -127,7 +133,7 @@ function MultiAction() {
     try {
       const result = await executeMultiAction();
       setResultMessage(`交易成功: ${JSON.stringify(result)}`);
-      message.success('交易执行成功！');
+      message.success('质押 + Transfer 执行成功！');
     } catch (error) {
       const errorMessage = error.message || '未知错误';
       setResultMessage(`交易失败: ${errorMessage}`);
@@ -139,6 +145,8 @@ function MultiAction() {
 
   return (
     <div style={{ padding: '20px' }}>
+      <h3>质押 + Transfer 多合约签名</h3>
+
       <Button
         type="primary"
         size="large"
@@ -146,7 +154,7 @@ function MultiAction() {
         onClick={handleButtonClick}
         style={{ marginBottom: '16px' }}
       >
-        {isLoading ? '执行中...' : '执行 Approve + Transfer'}
+        {isLoading ? '执行中...' : '执行质押 + Transfer'}
       </Button>
 
       {resultMessage && (
@@ -167,4 +175,4 @@ function MultiAction() {
   );
 }
 
-export default MultiAction;
+export default MultiActionFreeze;

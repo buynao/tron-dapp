@@ -1,62 +1,61 @@
 import { Button, message } from 'antd';
 import { useState } from 'react';
 
-// 常量配置
+// 常量配置 - SendTrx + UnFreezeBalanceV2 场景
 const CONTRACTS = {
-  USDT: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',
-  TARGET_ADDRESS: 'TDgJmYStKqzawFQyMav8XxNp1pTpdhEWg9',
-  FROM_ADDRESS: 'TKMBdaT5E5e4X3qtff3aY2ain5pG5WNPL2',
-  TOKEN_ADDRESS: 'TVDGpn4hCSzJ5nkHPLetk8KQBtwaTppnkr',
   RECIPIENT_ADDRESS: 'TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL',
+  FROM_ADDRESS: 'TKMBdaT5E5e4X3qtff3aY2ain5pG5WNPL2',
 };
 
 const TRANSACTION_PARAMS = {
-  TOKEN_AMOUNT: 100,
-  TOKEN_ID: '1002000',
-  APPROVE_AMOUNT: 100000000,
+  TRX_AMOUNT: 1, // 发送 150 TRX
+  UNFREEZE_AMOUNT: 1, // 解冻 100 TRX
+  RESOURCE_TYPE: 'BANDWIDTH',
+  LOCK_PERIOD: 1,
 };
 
-function MultiAction() {
+function MultiActionTrxUnfreeze() {
   const [resultMessage, setResultMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 创建转账交易
-  const createTransferTransaction = async (tronWeb) => {
-    return await tronWeb.transactionBuilder.sendToken(
-      CONTRACTS.TOKEN_ADDRESS,
-      TRANSACTION_PARAMS.TOKEN_AMOUNT,
-      TRANSACTION_PARAMS.TOKEN_ID,
+  // 创建TRX转账交易
+  const createSendTrxTransaction = async (tronWeb) => {
+    return await tronWeb.transactionBuilder.sendTrx(
       CONTRACTS.RECIPIENT_ADDRESS,
-    );
-  };
-
-  // 创建授权交易
-  const createApproveTransaction = async (tronWeb) => {
-    const parameter = [
-      { type: 'address', value: CONTRACTS.TARGET_ADDRESS },
-      { type: 'uint256', value: TRANSACTION_PARAMS.APPROVE_AMOUNT },
-    ];
-
-    return await tronWeb.transactionBuilder.triggerSmartContract(
-      CONTRACTS.USDT,
-      'approve(address,uint256)',
-      {},
-      parameter,
+      tronWeb.toSun(TRANSACTION_PARAMS.TRX_AMOUNT),
       CONTRACTS.FROM_ADDRESS,
     );
   };
 
+  // 创建解冻交易
+  const createUnfreezeTransaction = async (tronWeb) => {
+    const unfreeze = await tronWeb.transactionBuilder.unfreezeBalanceV2(
+      tronWeb.toSun(TRANSACTION_PARAMS.UNFREEZE_AMOUNT),
+      TRANSACTION_PARAMS.RESOURCE_TYPE,
+      window.tronWeb.defaultAddress.hex,
+      TRANSACTION_PARAMS.LOCK_PERIOD,
+    );
+
+    return { transaction: unfreeze };
+  };
+
   // 合并交易
-  const mergeTransactions = (approveTransaction, transferTransaction) => {
-    // 保存原始合约信息
-    const originalContract =
-      approveTransaction.transaction.raw_data.contract[1];
+  const mergeTransactions = (sendTrxTransaction, unfreezeTransaction) => {
+    // 这里需要创建一个新的交易结构，因为sendTrx返回的不是{ transaction: ... }格式
+    const mergedTransaction = {
+      transaction: {
+        ...sendTrxTransaction,
+        raw_data: {
+          ...sendTrxTransaction.raw_data,
+          contract: [
+            sendTrxTransaction.raw_data.contract[0],
+            unfreezeTransaction.transaction.raw_data.contract[0],
+          ],
+        },
+      },
+    };
 
-    // 将转账交易添加到授权交易中
-    approveTransaction.transaction.raw_data.contract[1] =
-      transferTransaction.raw_data.contract[0];
-
-    return { mergedTransaction: approveTransaction, originalContract };
+    return { mergedTransaction, originalContract: null };
   };
 
   // 签名并发送交易
@@ -66,18 +65,14 @@ function MultiAction() {
     originalContract,
   ) => {
     console.log(
-      '>>> MultiAction signAndSendTransaction',
-      mergedTransaction.transaction,
+      '>>> MultiActionTrxUnfreeze signAndSendTransaction',
+      mergedTransaction,
     );
-    // 签名交易
+
     const signedTransaction = await tronWeb.trx.sign(
       mergedTransaction.transaction,
     );
 
-    // 恢复原始合约信息
-    signedTransaction.raw_data.contract[1] = originalContract;
-
-    // 发送交易
     return await tronWeb.trx.sendRawTransaction(signedTransaction);
   };
 
@@ -90,18 +85,17 @@ function MultiAction() {
     }
 
     try {
-      message.info('创建交易中...');
+      message.info('创建TRX转账 + 解冻交易中...');
 
-      // 并行创建两个交易
-      const [transferTransaction, approveTransaction] = await Promise.all([
-        createTransferTransaction(tronWeb),
-        createApproveTransaction(tronWeb),
+      const [sendTrxTransaction, unfreezeTransaction] = await Promise.all([
+        createSendTrxTransaction(tronWeb),
+        createUnfreezeTransaction(tronWeb),
       ]);
 
       message.info('合并交易中...');
       const { mergedTransaction, originalContract } = mergeTransactions(
-        approveTransaction,
-        transferTransaction,
+        sendTrxTransaction,
+        unfreezeTransaction,
       );
 
       message.info('签名并发送交易中...');
@@ -111,10 +105,10 @@ function MultiAction() {
         originalContract,
       );
 
-      console.log('交易结果:', result);
+      console.log('TRX转账 + 解冻交易结果:', result);
       return result;
     } catch (error) {
-      console.error('交易执行失败:', error);
+      console.error('TRX转账 + 解冻交易执行失败:', error);
       throw error;
     }
   };
@@ -127,7 +121,7 @@ function MultiAction() {
     try {
       const result = await executeMultiAction();
       setResultMessage(`交易成功: ${JSON.stringify(result)}`);
-      message.success('交易执行成功！');
+      message.success('TRX转账 + 解冻执行成功！');
     } catch (error) {
       const errorMessage = error.message || '未知错误';
       setResultMessage(`交易失败: ${errorMessage}`);
@@ -139,6 +133,12 @@ function MultiAction() {
 
   return (
     <div style={{ padding: '20px' }}>
+      <h3>TRX转账 + 解冻多合约签名</h3>
+      <p style={{ color: '#666', marginBottom: '16px' }}>
+        发送 {TRANSACTION_PARAMS.TRX_AMOUNT} TRX + 解冻{' '}
+        {TRANSACTION_PARAMS.UNFREEZE_AMOUNT} TRX
+      </p>
+
       <Button
         type="primary"
         size="large"
@@ -146,7 +146,7 @@ function MultiAction() {
         onClick={handleButtonClick}
         style={{ marginBottom: '16px' }}
       >
-        {isLoading ? '执行中...' : '执行 Approve + Transfer'}
+        {isLoading ? '执行中...' : '执行TRX转账 + 解冻'}
       </Button>
 
       {resultMessage && (
@@ -167,4 +167,4 @@ function MultiAction() {
   );
 }
 
-export default MultiAction;
+export default MultiActionTrxUnfreeze;

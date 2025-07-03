@@ -1,5 +1,5 @@
 import eruda from 'eruda';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './App.css';
 // tron
 import SendTrx from './tron/SendTrx';
@@ -9,6 +9,15 @@ import SignMessage from './tron/signMessage';
 import SignMessageV2 from './tron/signMessageV2';
 import MultiSign from './tron/muiltSign';
 import MultiAction from './tron/MultiAction';
+import MultiActionFreeze from './tron/MultiActionUnfreeze';
+// 新增的多合约组合组件
+import MultiActionDecreaseApprove from './tron/MultiActionDecreaseApprove';
+import MultiActionIncreaseApprove from './tron/MultiActionIncreaseApprove';
+import MultiActionSmartContract from './tron/MultiActionSmartContract';
+import MultiActionTrxUnfreeze from './tron/MultiActionTrxUnfreeze';
+import MultiActionApproveTrx from './tron/MultiActionApproveTrx';
+import MultiActionTokenUnfreeze from './tron/MultiActionTokenUnfreeze';
+import TronAction from './tron/TronAction';
 import TriggerSmartContract from './tron/TriggerSmartContract';
 import Approve from './tron/Approve';
 import FreezeBalance from './tron/FreezeBalance';
@@ -59,27 +68,10 @@ import EOSSignMessage from './eos/SignMessage';
 import EOSTransfer from './eos/Transfer';
 
 function App() {
-  const [disabled, toggleDisabled] = useState(true);
-  const [location, setLocation] = useState('获取中...');
+  const [disabled] = useState(true);
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLocation(
-          `纬度: ${position.coords.latitude}, 经度: ${position.coords.longitude}`,
-        );
-      },
-      (error) => {
-        setLocation(`获取位置失败: ${error.message}`);
-      },
-    );
-  }, []);
-  useEffect(() => {
-    initClient(toggleDisabled);
-  }, []);
   return (
     <div>
-      <p>当前地理位置：{location}</p>
       <h3>tron</h3>
       <SendTrx />
       <SendAsset />
@@ -90,7 +82,28 @@ function App() {
       <SignMessageV2 />
       <div style={{ marginTop: 20 }} />
       <MultiSign />
-      <MultiAction />
+      <div
+        style={{
+          marginTop: 20,
+          padding: '15px',
+          backgroundColor: '#f0f0f0',
+          borderRadius: '8px',
+        }}
+      >
+        <h4 style={{ margin: '0 0 15px 0', color: '#333' }}>多合约签名场景</h4>
+        <div style={{ marginBottom: '10px' }}>
+          <strong>基础组合:</strong>
+        </div>
+        <MultiAction />
+        <MultiActionFreeze />
+        <MultiActionDecreaseApprove />
+        <MultiActionIncreaseApprove />
+        <MultiActionApproveTrx />
+        <MultiActionSmartContract />
+        <MultiActionTrxUnfreeze />
+        <MultiActionTokenUnfreeze />
+      </div>
+      <TronAction />
       <div style={{ marginTop: 20 }} />
       <TriggerSmartContract />
       <Approve />
