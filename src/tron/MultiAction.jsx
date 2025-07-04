@@ -47,38 +47,108 @@ function MultiAction() {
   };
 
   // 合并交易
-  const mergeTransactions = (approveTransaction, transferTransaction) => {
-    // 保存原始合约信息
-    const originalContract =
-      approveTransaction.transaction.raw_data.contract[1];
+  const mergeTransactions = async (
+    approveTransaction,
+    transferTransaction,
+    tronWeb,
+  ) => {
+    // 创建新的合并交易
+    const mergedTransaction = {
+      ...approveTransaction.transaction,
+      raw_data: {
+        ...approveTransaction.transaction.raw_data,
+        contract: [
+          ...approveTransaction.transaction.raw_data.contract,
+          transferTransaction.raw_data.contract[0],
+        ],
+      },
+    };
+    // export const validRawTx = (raw_data: unknown, rawDataHex: string) => {
+    //   try {
+    //     const tx = TronWeb.utils.transaction.txJsonToPb({ raw_data });
+    //     const recalculateRawDataHex: string = TronWeb.utils.bytes.byteArray2hexStr(
+    //       tx.getRawData().serializeBinary(),
+    //     );
 
-    // 将转账交易添加到授权交易中
-    approveTransaction.transaction.raw_data.contract[1] =
-      transferTransaction.raw_data.contract[0];
+    //     return recalculateRawDataHex.toLowerCase() === rawDataHex.toLowerCase();
+    //   } catch (e) {
+    //     console.error(e);
 
-    return { mergedTransaction: approveTransaction, originalContract };
+    //     return false;
+    //   }
+    // };
+    // const tx = tronWeb.utils.transaction.txJsonToPb({ raw_data });
+    // 重新生成 raw_data_hex
+    const tx = tronWeb.utils.transaction.txJsonToPb(mergedTransaction);
+    const rawDataHex = tronWeb.utils.bytes.byteArray2hexStr(
+      tx.getRawData().serializeBinary(),
+    );
+
+    mergedTransaction.raw_data_hex = rawDataHex;
+
+    return {
+      transaction: mergedTransaction,
+      txID: mergedTransaction.txID,
+    };
   };
 
-  // 签名并发送交易
-  const signAndSendTransaction = async (
-    tronWeb,
-    mergedTransaction,
-    originalContract,
-  ) => {
+  // 签名和验证
+  const signAndSendTransaction = async (tronWeb, mergedTransaction) => {
     console.log(
-      '>>> MultiAction signAndSendTransaction',
+      '>>> mergedTransaction.transaction',
       mergedTransaction.transaction,
     );
+
     // 签名交易
     const signedTransaction = await tronWeb.trx.sign(
       mergedTransaction.transaction,
     );
+    console.log('>>> signedTransaction', signedTransaction);
 
-    // 恢复原始合约信息
-    signedTransaction.raw_data.contract[1] = originalContract;
+    // 验证交易签名
+    const verifyTransactionSignature = async (signedTx) => {
+      try {
+        // 获取验证所需的数据
+        const rawDataHex = signedTx.raw_data_hex;
+        const signature = signedTx.signature[0];
+        const signerAddress = tronWeb.defaultAddress.base58;
 
-    // 发送交易
-    return await tronWeb.trx.sendRawTransaction(signedTransaction);
+        if (!rawDataHex || !signature || !signerAddress) {
+          console.error('缺少验证所需的数据');
+          return false;
+        }
+
+        // 使用 raw_data_hex 验证签名
+        const isValid = await tronWeb.trx.verifyMessage(
+          rawDataHex,
+          signature,
+          signerAddress,
+        );
+
+        console.log('交易签名验证:', {
+          txID: signedTx.txID,
+          rawDataLength: rawDataHex.length,
+          signatureLength: signature.length,
+          isValid: isValid,
+        });
+
+        return isValid;
+      } catch (error) {
+        console.error('验证签名时出错:', error);
+        return false;
+      }
+    };
+
+    // 执行验证
+    const isValid = await verifyTransactionSignature(signedTransaction);
+
+    if (isValid) {
+      console.log('✅ 交易签名验证成功！');
+    } else {
+      console.warn('⚠️ 交易签名验证失败，但签名过程正常完成');
+    }
+
+    return signedTransaction;
   };
 
   // 主要执行函数
@@ -99,17 +169,14 @@ function MultiAction() {
       ]);
 
       message.info('合并交易中...');
-      const { mergedTransaction, originalContract } = mergeTransactions(
+      const mergedTransaction = await mergeTransactions(
         approveTransaction,
         transferTransaction,
+        tronWeb,
       );
 
       message.info('签名并发送交易中...');
-      const result = await signAndSendTransaction(
-        tronWeb,
-        mergedTransaction,
-        originalContract,
-      );
+      const result = await signAndSendTransaction(tronWeb, mergedTransaction);
 
       console.log('交易结果:', result);
       return result;
