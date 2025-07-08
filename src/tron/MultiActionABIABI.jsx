@@ -87,21 +87,25 @@ function MultiActionABIABI() {
 
   // 合并交易
   const mergeTransactions = (firstABITransaction, secondABITransaction) => {
-    const originalContract =
-      firstABITransaction.transaction.raw_data.contract[1];
+    firstABITransaction.transaction.raw_data.contract[1] =
+      secondABITransaction.transaction.raw_data.contract[0];
 
-    // firstABITransaction.transaction.raw_data.contract[1] =
-    //   secondABITransaction.transaction.raw_data.contract[0];
-
-    return { mergedTransaction: firstABITransaction, originalContract };
+    const tx = tronWeb.utils.transaction.txJsonToPb(
+      firstABITransaction.transaction,
+    );
+    const rawDataHex = tronWeb.utils.bytes.byteArray2hexStr(
+      tx.getRawData().serializeBinary(),
+    );
+    console.log('>>> rawDataHex', rawDataHex);
+    firstABITransaction.raw_data_hex = rawDataHex;
+    firstABITransaction.transaction.raw_data_hex = rawDataHex;
+    return {
+      mergedTransaction: firstABITransaction,
+    };
   };
 
   // 签名并发送交易
-  const signAndSendTransaction = async (
-    tronWeb,
-    mergedTransaction,
-    originalContract,
-  ) => {
+  const signAndSendTransaction = async (tronWeb, mergedTransaction) => {
     console.log('>>> mergedTransaction', mergedTransaction);
 
     return await tronWeb.trx.sign(mergedTransaction.transaction);
