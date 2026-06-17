@@ -17,6 +17,7 @@ import MultiActionTrxUnfreeze from './tron/MultiActionTrxUnfreeze';
 import MultiActionApproveTrx from './tron/MultiActionApproveTrx';
 import MultiActionTokenUnfreeze from './tron/MultiActionTokenUnfreeze';
 import MultiActionApproveEOA from './tron/MultiActionApproveEOA';
+import MultiActionApproveContractUnknown from './tron/MultiActionApproveContractUnknown';
 import TronAction from './tron/TronAction';
 import TriggerSmartContract from './tron/TriggerSmartContract';
 import Approve from './tron/Approve';
@@ -111,6 +112,7 @@ function App() {
         <MultiActionIncreaseApprove />
         <MultiActionApproveTrx />
         <MultiActionApproveEOA />
+        <MultiActionApproveContractUnknown />
         <div style={{ marginTop: '20px', marginBottom: '10px' }}>
           <strong>智能合约组合:</strong>
         </div>
