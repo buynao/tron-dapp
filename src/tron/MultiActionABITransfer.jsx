@@ -9,7 +9,7 @@ const CONTRACTS = {
 };
 
 const TRANSACTION_PARAMS = {
-  ABI_CALL_VALUE: 2000000, // ABI 合约调用值 2 TRX
+  ABI_CALL_VALUE: '2000000', // ABI 合约调用值 2 TRX
   TRX_AMOUNT: 1, // 转账 80 TRX
 };
 
