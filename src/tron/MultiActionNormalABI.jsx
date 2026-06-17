@@ -182,12 +182,7 @@ function MultiActionNormalABI() {
           style={{
             marginTop: '16px',
             padding: '12px',
-            backgroundColor: resultMessage.includes('成功')
-              ? '#f6ffed'
-              : '#fff2f0',
-            border: `1px solid ${
-              resultMessage.includes('成功') ? '#b7eb8f' : '#ffccc7'
-            }`,
+            backgroundColor: '#f0f0f0',
             borderRadius: '4px',
             wordBreak: 'break-all',
           }}

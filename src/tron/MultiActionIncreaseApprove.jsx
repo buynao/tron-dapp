@@ -174,7 +174,7 @@ function MultiActionIncreaseApprove() {
           style={{
             marginTop: '16px',
             padding: '12px',
-            backgroundColor: '#f5f5f5',
+            backgroundColor: '#f0f0f0',
             borderRadius: '4px',
             wordBreak: 'break-all',
           }}

@@ -94,8 +94,6 @@ function App() {
         style={{
           marginTop: 20,
           padding: '15px',
-          backgroundColor: '#f0f0f0',
-          borderRadius: '8px',
         }}
       >
         <h4 style={{ margin: '0 0 15px 0', color: '#333' }}>多合约签名场景</h4>
