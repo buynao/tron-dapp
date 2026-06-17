@@ -9,7 +9,7 @@ const CONTRACTS = {
 };
 
 const TRANSACTION_PARAMS = {
-  CALL_VALUE: 32314887, // 智能合约调用值
+  CALL_VALUE: '32314887', // 智能合约调用值
   TRX_AMOUNT: 1, // 发送 100 TRX
   SMART_CONTRACT_DATA:
     'cef95229000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001a0',
@@ -34,7 +34,7 @@ function MultiActionSmartContract() {
                   owner_address: '419b796e0e2412e4f0cabd922fb3ef9f8e99f5ad80',
                   contract_address:
                     '413c9e0ac33f138216c50638d71c344a299d0d1030',
-                  call_value: 32314887,
+                  call_value: '32314887',
                 },
                 type_url: 'type.googleapis.com/protocol.TriggerSmartContract',
               },

@@ -11,7 +11,7 @@ const CONTRACTS = {
 
 const TRANSACTION_PARAMS = {
   APPROVE_AMOUNT: 50000000, // 普通合约授权 50 USDT
-  ABI_CALL_VALUE: 1000000, // ABI 合约调用值 1 TRX
+  ABI_CALL_VALUE: '1000000', // ABI 合约调用值 1 TRX
 };
 
 function MultiActionNormalABI() {

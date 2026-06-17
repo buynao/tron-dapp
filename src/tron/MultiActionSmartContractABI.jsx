@@ -9,7 +9,7 @@ const CONTRACTS = {
 };
 
 const TRANSACTION_PARAMS = {
-  CALL_VALUE: 32314887, // 智能合约调用值
+  CALL_VALUE: '32314887', // 智能合约调用值
   TRX_AMOUNT: 1, // 发送 100 TRX
   SMART_CONTRACT_DATA:
     'cef95229000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001a0',
@@ -34,7 +34,7 @@ function MultiActionSmartContract() {
                   owner_address: '419b796e0e2412e4f0cabd922fb3ef9f8e99f5ad80',
                   contract_address:
                     '413c9e0ac33f138216c50638d71c344a299d0d1030',
-                  call_value: 32314887,
+                  call_value: '32314887',
                 },
                 type_url: 'type.googleapis.com/protocol.TriggerSmartContract',
               },
@@ -66,7 +66,7 @@ function MultiActionSmartContract() {
                 data: '7ff36ab5000000000000000000000000000000000000000000000004fa987d13e6f54ceb00000000000000000000000000000000000000000000000000000000000000800000000000000000000000009b796e0e2412e4f0cabd922fb3ef9f8e99f5ad80000000000000000000000000000000000000000000000000000000006865e62d0000000000000000000000000000000000000000000000000000000000000002000000000000000000000000891cdb91d149f23b1a45d9c5ca78a88d0cb44c180000000000000000000000002c1ebf7737aabf5bd3e38f1f31da3cd2b7a268f2',
                 owner_address: '419b796e0e2412e4f0cabd922fb3ef9f8e99f5ad80',
                 contract_address: '41ff7155b5df8008fbf3834922b2d52430b27874f5',
-                call_value: 1000000,
+                call_value: '1000000',
               },
               type_url: 'type.googleapis.com/protocol.TriggerSmartContract',
             },
