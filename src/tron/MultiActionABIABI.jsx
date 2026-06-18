@@ -9,8 +9,8 @@ const CONTRACTS = {
 };
 
 const TRANSACTION_PARAMS = {
-  FIRST_CALL_VALUE: 1500000, // 第一个 ABI 合约调用值 1.5 TRX
-  SECOND_CALL_VALUE: 3000000, // 第二个 ABI 合约调用值 3 TRX
+  FIRST_CALL_VALUE: '1500000', // 第一个 ABI 合约调用值 1.5 TRX
+  SECOND_CALL_VALUE: '3000000', // 第二个 ABI 合约调用值 3 TRX
 };
 
 function MultiActionABIABI() {
