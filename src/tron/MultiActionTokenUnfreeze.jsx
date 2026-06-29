@@ -1,7 +1,7 @@
 import { Button, message } from 'antd';
 import { useState } from 'react';
 
-// 常量配置 - SendToken + UnFreezeBalanceV2 场景
+// Constant configuration - swapExactInput + UnFreezeBalanceV2 case
 const CONTRACTS = {
   TOKEN_ADDRESS: 'TVDGpn4hCSzJ5nkHPLetk8KQBtwaTppnkr',
   RECIPIENT_ADDRESS: 'TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL',
@@ -10,7 +10,7 @@ const CONTRACTS = {
 const TRANSACTION_PARAMS = {
   TOKEN_AMOUNT: 200,
   TOKEN_ID: '1002000',
-  UNFREEZE_AMOUNT: 300, // 解冻 300 TRX
+  UNFREEZE_AMOUNT: 300, // unfreeze 300 TRX
   RESOURCE_TYPE: 'ENERGY',
   LOCK_PERIOD: 1,
 };
@@ -19,7 +19,7 @@ function MultiActionTokenUnfreeze() {
   const [resultMessage, setResultMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 创建发送代币交易
+  // Create swapExactInput contract call transaction
   const createSmartContractTransaction = async (tronWeb) => {
     return {
       transaction: {
@@ -53,7 +53,7 @@ function MultiActionTokenUnfreeze() {
     };
   };
 
-  // 创建赎回交易
+  // Createredeem transaction
   const createUnfreezeTransaction = async (tronWeb) => {
     return {
       transaction: {
@@ -84,9 +84,9 @@ function MultiActionTokenUnfreeze() {
     };
   };
 
-  // 合并交易
+  // Merge transaction
   const mergeTransactions = (sendTokenTransaction, unfreezeTransaction) => {
-    // 创建新的交易结构
+    // Createnew transactionstructure
     const mergedTransaction = {
       transaction: {
         ...sendTokenTransaction,
@@ -115,7 +115,7 @@ function MultiActionTokenUnfreeze() {
     };
   };
 
-  // 签名并发送交易
+  // Sign and broadcast transaction
   const signAndSendTransaction = async (
     tronWeb,
     mergedTransaction,
@@ -129,16 +129,16 @@ function MultiActionTokenUnfreeze() {
     return await tronWeb.trx.sign(mergedTransaction);
   };
 
-  // 主要执行函数
+  // Main execution function
   const executeMultiAction = async () => {
     const tronWeb = window.tronWeb;
 
     if (!tronWeb) {
-      throw new Error('TronWeb 未加载，请确保已连接 Tron 钱包');
+      throw new Error('TronWeb is not loaded; make sure a Tron wallet is connected');
     }
 
     try {
-      message.info('创建发送代币 + 解冻交易中...');
+      message.info('Create swapExactInput + redeem transaction...');
 
       const [sendTokenTransaction, unfreezeTransaction] = await Promise.all([
         createSmartContractTransaction(tronWeb),
@@ -146,40 +146,40 @@ function MultiActionTokenUnfreeze() {
       ]);
       console.log('>>> sendTokenTransaction', sendTokenTransaction);
       console.log('>>> unfreezeTransaction', unfreezeTransaction);
-      message.info('合并交易中...');
+      message.info('Merging transactions...');
       const { mergedTransaction, originalContract } = mergeTransactions(
         sendTokenTransaction,
         unfreezeTransaction,
       );
 
-      message.info('签名并发送交易中...');
+      message.info('Signing and broadcasting transaction...');
       const result = await signAndSendTransaction(
         tronWeb,
         mergedTransaction,
         originalContract,
       );
 
-      console.log('发送代币 + 解冻交易结果:', result);
+      console.log('swapExactInput + redeemTransaction result:', result);
       return result;
     } catch (error) {
-      console.error('发送代币 + 解冻交易执行失败:', error);
+      console.error('swapExactInput + redeemTransaction failed:', error);
       throw error;
     }
   };
 
-  // 按钮点击处理函数
+  // Button click handler
   const handleButtonClick = async () => {
     setIsLoading(true);
     setResultMessage('');
 
     try {
       const result = await executeMultiAction();
-      setResultMessage(`交易成功: ${JSON.stringify(result)}`);
-      message.success('发送代币 + 解冻执行成功！');
+      setResultMessage(`Transaction succeeded: ${JSON.stringify(result)}`);
+      message.success('swapExactInput + redeemsucceeded!');
     } catch (error) {
-      const errorMessage = error.message || '未知错误';
-      setResultMessage(`交易失败: ${errorMessage}`);
-      message.error(`交易执行失败: ${errorMessage}`);
+      const errorMessage = error.message || 'Unknown error';
+      setResultMessage(`Transaction failed: ${errorMessage}`);
+      message.error(`Transaction failed: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -187,7 +187,7 @@ function MultiActionTokenUnfreeze() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h3>智能合约 + 赎回多合约签名</h3>
+      <h3>swapExactInput + redeem multi-contract signing</h3>
 
       <Button
         type="primary"
@@ -196,7 +196,7 @@ function MultiActionTokenUnfreeze() {
         onClick={handleButtonClick}
         style={{ marginBottom: '16px' }}
       >
-        {isLoading ? '执行中...' : '智能合约 + 赎回'}
+        {isLoading ? 'Running...' : 'Run swapExactInput + redeem'}
       </Button>
 
       {resultMessage && (
@@ -209,7 +209,7 @@ function MultiActionTokenUnfreeze() {
             wordBreak: 'break-all',
           }}
         >
-          <strong>执行结果:</strong>
+          <strong>Result:</strong>
           <div style={{ marginTop: '8px' }}>{resultMessage}</div>
         </div>
       )}

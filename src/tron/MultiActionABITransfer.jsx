@@ -1,7 +1,7 @@
 import { Button, message } from 'antd';
 import { useState } from 'react';
 
-// 常量配置 - ABI 合约 + 转账场景
+// Constant configuration - addLiquidity + transfercase
 const CONTRACTS = {
   ABI_CONTRACT: '41ff7155b5df8008fbf3834922b2d52430b27874f5',
   FROM_ADDRESS: 'TKMBdaT5E5e4X3qtff3aY2ain5pG5WNPL2',
@@ -9,15 +9,15 @@ const CONTRACTS = {
 };
 
 const TRANSACTION_PARAMS = {
-  ABI_CALL_VALUE: '2000000', // ABI 合约调用值 2 TRX
-  TRX_AMOUNT: 1, // 转账 80 TRX
+  ABI_CALL_VALUE: '2000000', // addLiquidity call value 2 TRX
+  TRX_AMOUNT: 1, // transfer 80 TRX
 };
 
 function MultiActionABITransfer() {
   const [resultMessage, setResultMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 创建 ABI 智能合约交易 - DEX 流动性添加
+  // Create addLiquidity(address,address,uint256,uint256,uint256,uint256,address,uint256)  transaction
   const createABIContractTransaction = async (tronWeb) => {
     return {
       transaction: {
@@ -51,7 +51,7 @@ function MultiActionABITransfer() {
     };
   };
 
-  // 创建 TRX 转账交易
+  // Create TRX transfer transaction
   const createTrxTransferTransaction = async (tronWeb) => {
     return await tronWeb.transactionBuilder.sendTrx(
       CONTRACTS.RECIPIENT_ADDRESS,
@@ -60,7 +60,7 @@ function MultiActionABITransfer() {
     );
   };
 
-  // 合并交易
+  // Merge transaction
   const mergeTransactions = (abiTransaction, trxTransaction) => {
     const originalContract = abiTransaction.transaction.raw_data.contract[1];
 
@@ -70,7 +70,7 @@ function MultiActionABITransfer() {
     return { mergedTransaction: abiTransaction, originalContract };
   };
 
-  // 签名并发送交易
+  // Sign and broadcast transaction
   const signAndSendTransaction = async (
     tronWeb,
     mergedTransaction,
@@ -84,59 +84,59 @@ function MultiActionABITransfer() {
     return await tronWeb.trx.sign(mergedTransaction.transaction);
   };
 
-  // 主要执行函数
+  // Main execution function
   const executeMultiAction = async () => {
     const tronWeb = window.tronWeb;
 
     if (!tronWeb) {
-      throw new Error('TronWeb 未加载，请确保已连接 Tron 钱包');
+      throw new Error('TronWeb is not loaded; make sure a Tron wallet is connected');
     }
 
     try {
-      message.info('创建 ABI 合约 + TRX 转账交易中...');
+      message.info('Create addLiquidity + TRX transfer transaction...');
 
       const [abiTransaction, trxTransaction] = await Promise.all([
         createABIContractTransaction(tronWeb),
         createTrxTransferTransaction(tronWeb),
       ]);
 
-      console.log('>>> ABI 合约交易:', abiTransaction);
-      console.log('>>> TRX 转账交易:', trxTransaction);
+      console.log('>>> addLiquidity  transaction:', abiTransaction);
+      console.log('>>> TRX transfer transaction:', trxTransaction);
 
-      message.info('合并交易中...');
+      message.info('Merging transactions...');
       const { mergedTransaction, originalContract } = mergeTransactions(
         abiTransaction,
         trxTransaction,
       );
 
-      message.info('签名并发送交易中...');
+      message.info('Signing and broadcasting transaction...');
       const result = await signAndSendTransaction(
         tronWeb,
         mergedTransaction,
         originalContract,
       );
 
-      console.log('ABI 合约 + TRX 转账交易结果:', result);
+      console.log('addLiquidity + TRX transferTransaction result:', result);
       return result;
     } catch (error) {
-      console.error('ABI 合约 + TRX 转账交易执行失败:', error);
+      console.error('addLiquidity + TRX transferTransaction failed:', error);
       throw error;
     }
   };
 
-  // 按钮点击处理函数
+  // Button click handler
   const handleButtonClick = async () => {
     setIsLoading(true);
     setResultMessage('');
 
     try {
       const result = await executeMultiAction();
-      setResultMessage(`交易成功: ${JSON.stringify(result)}`);
-      message.success('ABI 合约 + TRX 转账执行成功！');
+      setResultMessage(`Transaction succeeded: ${JSON.stringify(result)}`);
+      message.success('addLiquidity + TRX transfersucceeded!');
     } catch (error) {
-      const errorMessage = error.message || '未知错误';
-      setResultMessage(`交易失败: ${errorMessage}`);
-      message.error(`交易执行失败: ${errorMessage}`);
+      const errorMessage = error.message || 'Unknown error';
+      setResultMessage(`Transaction failed: ${errorMessage}`);
+      message.error(`Transaction failed: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -144,18 +144,18 @@ function MultiActionABITransfer() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h3>ABI 合约 + TRX 转账多签名交易</h3>
+      <h3>addLiquidity + TRX transfer multi-action transaction</h3>
       <div style={{ color: '#666', marginBottom: '16px', lineHeight: '1.5' }}>
         <p>
-          <strong>交易组合说明:</strong>
+          <strong>Transaction combination:</strong>
         </p>
         <ul style={{ paddingLeft: '20px', margin: '8px 0' }}>
-          <li>ABI 合约调用: 添加流动性 (addLiquidityETH)</li>
-          <li>调用价值: {TRANSACTION_PARAMS.ABI_CALL_VALUE / 1000000} TRX</li>
-          <li>TRX 转账: 发送 {TRANSACTION_PARAMS.TRX_AMOUNT} TRX</li>
+          <li>addLiquidity: add liquidity</li>
+          <li>Call value: {TRANSACTION_PARAMS.ABI_CALL_VALUE / 1000000} TRX</li>
+          <li>TRX transfer: send {TRANSACTION_PARAMS.TRX_AMOUNT} TRX</li>
         </ul>
         <p style={{ fontSize: '12px', color: '#999', marginTop: '8px' }}>
-          注意: 此组合适用于 DeFi 操作后的资金转移场景
+          Note: this combination is useful for fund movement after DeFi operations
         </p>
       </div>
 
@@ -166,7 +166,7 @@ function MultiActionABITransfer() {
         onClick={handleButtonClick}
         style={{ marginBottom: '16px' }}
       >
-        {isLoading ? '执行中...' : '执行 ABI 合约 + TRX 转账'}
+        {isLoading ? 'Running...' : 'Run addLiquidity + TRX transfer'}
       </Button>
 
       {resultMessage && (
@@ -179,7 +179,7 @@ function MultiActionABITransfer() {
             wordBreak: 'break-all',
           }}
         >
-          <strong>执行结果:</strong>
+          <strong>Result:</strong>
           <div style={{ marginTop: '8px' }}>{resultMessage}</div>
         </div>
       )}

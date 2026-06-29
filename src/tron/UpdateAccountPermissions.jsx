@@ -9,7 +9,7 @@ function UpdateAccountPermissions() {
       <Button loading={loading}  onClick={async () => {
         const tronWeb = window.tronWeb;
         try {
-          message.info("发起交易中...")
+          message.info("Starting request...")
           setLoading(true)
           let ownerAddress = window.tronWeb.defaultAddress.hex;
           let ownerPermission = { type: 0, permission_name: 'owner' };

@@ -9,7 +9,7 @@ function SignMessage() {
       <Button loading={loading}  onClick={async () => {
         const tronWeb = window.tronWeb;
         try {
-          message.info("发起交易中...")
+          message.info("Starting request...")
           setLoading(true)
          const signature = await tronWeb.trx.signMessageV2('Hello Word V2');
          setMsg(signature)

@@ -1,6 +1,6 @@
 window['imToken'] = window['imToken'] || {
   callAPI: () => {
-    console.error('当前不是 imToken 环境')
+    console.error('Not running in imToken')
   },
   callPromisifyAPI: (apiName, payload) => {
     switch (apiName) {
@@ -17,10 +17,10 @@ window['imToken'] = window['imToken'] || {
         return Promise.resolve('https://cosmosapi-mainnet.tokenlon.im')
       case 'cosmos.sendTransaction':
         console.log(payload)
-        return Promise.reject(new Error('当前不是 imToken 环境'))
+        return Promise.reject(new Error('Not running in imToken'))
       default:
         console.log(apiName, payload)
-        return Promise.reject(new Error('当前不是 imToken 环境'))
+        return Promise.reject(new Error('Not running in imToken'))
     }
   }
 }

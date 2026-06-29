@@ -28,7 +28,7 @@ function Delegate() {
     <div>
       <Button loading={loading} onClick={async () => {
         try {
-          message.info("发起交易中...")
+          message.info("Starting request...")
           setLoading(true)
           const account = await getAccounts()
           console.log(account)

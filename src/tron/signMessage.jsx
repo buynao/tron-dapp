@@ -18,7 +18,7 @@ function SignMessage() {
         loading={loading}
         onClick={async () => {
           try {
-            message.info('发起交易中...');
+            message.info('Starting request...');
             setLoading(true);
             setMsg('');
             const signature = await tronWeb.trx.sign(strHash);
@@ -57,7 +57,7 @@ function SignMessage() {
               );
               console.log('>>>>>>>>>>res', res);
               if (res) {
-                message.success('签名结果匹配');
+                message.success('Signature result matches');
                 return;
               }
             } catch (error) {

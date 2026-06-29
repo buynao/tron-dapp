@@ -7,7 +7,7 @@ function SendNFT() {
         onClick={async () => {
           const tronWeb = window.tronWeb;
           try {
-          message.info("发起交易中...")
+          message.info("Starting request...")
           setLoading(true)
             const trc721ContractAddress = "TRio4FwnDvtYN2ogss6Qm7Hn2EaTLwWMNs";//contract address
             console.log(">>>>>>>>trc721ContractAddress", trc721ContractAddress)

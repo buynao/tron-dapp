@@ -9,7 +9,7 @@ function FreezeBalanceV2() {
       <Button loading={loading}  onClick={async () => {
         const tronWeb = window.tronWeb;
         try {
-          message.info("发起交易中...")
+          message.info("Starting request...")
           setLoading(true)
           console.log(">>>>window.tronWeb.defaultAddress.hex", window.tronWeb.defaultAddress.hex)
           const tradeobj = await tronWeb.transactionBuilder.freezeBalanceV2(tronWeb.toSun(1),

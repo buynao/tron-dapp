@@ -9,7 +9,7 @@ function SendAsset() {
       <Button loading={loading}  onClick={async () => {
         const tronWeb = window.tronWeb;
         try {
-          message.info("发起交易中...")
+          message.info("Starting request...")
           setLoading(true)
           const transaction = await tronWeb.transactionBuilder.sendAsset("TVDGpn4hCSzJ5nkHPLetk8KQBtwaTppnkr", 100, "1002000", "TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL");
           const signedTransaction = await tronWeb.trx.sign(transaction);

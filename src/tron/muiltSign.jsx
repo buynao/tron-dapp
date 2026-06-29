@@ -9,7 +9,7 @@ function MultiSign() {
       <Button loading={loading}  onClick={async () => {
         const tronWeb = window.tronWeb;
         try {
-          message.info("发起交易中...")
+          message.info("Starting request...")
           setLoading(true)
           const tradeobj = await tronWeb.transactionBuilder.freezeBalance(tronWeb.toSun(100), 3, "ENERGY", "415d73f56d93a9380a100d2a340dd30dc3df6e0746", "415d73f56d93a9380a100d2a340dd30dc3df6e0746", 0);
           const signature = await tronWeb.trx.multiSign(tradeobj) || '';

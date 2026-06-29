@@ -7,7 +7,7 @@ const CouncilVote = ({ disabled }) => {
   const [msg, setMsg] = useState('')
   return <div><Button disabled={disabled} onClick={async () => {
       const api = getAPI()
-      message.loading('发起App请求...')
+      message.loading('Starting app request...')
       if (api) {
       const vote = api.tx.council.vote('0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef', 1, true)
       signAndSend(vote)

@@ -8,7 +8,7 @@ const UnBond = ({ disabled }) => {
   const [msg, setMsg] = useState('')
   return <div><Button disabled={disabled} onClick={async () => {
       const api = getAPI()
-      message.loading('发起App请求...')
+      message.loading('Starting app request...')
       if (api) {
         const unbondTx = api.tx.staking.unbond(new BN(1))
         signAndSend(unbondTx)

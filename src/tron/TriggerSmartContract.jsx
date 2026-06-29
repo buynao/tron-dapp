@@ -11,7 +11,7 @@ function TriggerSmartContract() {
         onClick={async () => {
           const tronWeb = window.tronWeb;
           try {
-            message.info('发起交易中...');
+            message.info('Starting request...');
             setLoading(true);
             const signature = await tronWeb.trx.sign({
               visible: false,
@@ -51,7 +51,7 @@ function TriggerSmartContract() {
           }
         }}
       >
-        未知合约:{msg}
+        swapExactInput:{msg}
       </Button>
     </div>
   );

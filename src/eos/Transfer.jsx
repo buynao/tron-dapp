@@ -3,6 +3,7 @@ import { Button, message } from 'antd';
 import { imToken } from '../sdk'
 import { Api, JsonRpc, RpcError } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';           // development only
+import { getDryRunResponse, recordAppRequest } from '../requestCapture';
 
 function EOSTransfer() {
   const [msg, setMsg] = useState('')
@@ -11,7 +12,7 @@ function EOSTransfer() {
     <div>
       <Button loading={loading} onClick={async () => {
         try {
-          message.info("发起交易中...")
+          message.info("Starting request...")
           setLoading(true)
           console.log(">>>>>>scatter", scatter)
           const pubkey = await scatter.getPublicKey()
@@ -22,7 +23,7 @@ function EOSTransfer() {
           console.log(">>>>>>rpc", rpc)
           const api = new Api({ rpc, signatureProvider });
           console.log(">>>>>>api", api)
-          const result = await api.transact({
+          const transactPayload = {
             actions: [{
               account: 'eosio.token',
               name: 'transfer',
@@ -33,10 +34,24 @@ function EOSTransfer() {
                 memo: '',
               },
             }]
-          }, {
+          };
+          const transactOptions = {
             blocksBehind: 3,
             expireSeconds: 30,
-          });
+          };
+          const requestPayload = {
+            chain: 'EOS',
+            transport: 'eosjs.api.transact',
+            apiName: 'eos.transact',
+            payload: transactPayload,
+            options: transactOptions,
+          };
+          recordAppRequest(requestPayload);
+          const dryRunResponse = getDryRunResponse(requestPayload);
+          if (dryRunResponse.active) {
+            await dryRunResponse.response;
+          }
+          const result = await api.transact(transactPayload, transactOptions);
           setMsg(result)
           setLoading(false)
         } catch(e) {

@@ -12,7 +12,7 @@ function SignMessage() {
         loading={loading}
         onClick={async () => {
           try {
-            message.info('发起交易中...');
+            message.info('Starting request...');
             setLoading(true);
             console.log(scatter);
             const pubkey = await scatter.getPublicKey();
@@ -43,10 +43,10 @@ function SignMessage() {
               const recoverPublickey = ecc.recover(msg, 'test data');
               console.log('>>>>>>>>>>recoverPublickey', recoverPublickey);
               if (recoverResult) {
-                message.success('签名结果匹配');
+                message.success('Signature result matches');
                 return;
               }
-              message.error(`签名结果不匹配...${recoverPublickey}`);
+              message.error(`Signature result does not match...${recoverPublickey}`);
             } catch (e) {
               message.error(e.message);
             }

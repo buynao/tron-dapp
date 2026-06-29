@@ -8,7 +8,7 @@ const PayoutRewards = ({ disabled }) => {
   const [msg, setMsg] = useState('')
   return <div><Button disabled={true} onClick={async () => {
       const api = getAPI()
-      message.loading('发起App请求...')
+      message.loading('Starting app request...')
       if (api) {
         await web3Enable('init')
         const allAccounts = await web3Accounts();

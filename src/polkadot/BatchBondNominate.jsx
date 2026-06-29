@@ -8,7 +8,7 @@ const BatchBondNominate = ({ disabled }) => {
   const [msg, setMsg] = useState('')
   return <div><Button disabled={disabled} onClick={async () => {
       const api = getAPI()
-      message.loading('发起App请求...')
+      message.loading('Starting app request...')
       if (api) {
         const bondTx = api.tx.staking.bond(new BN(1), 'Stash')
         const nominateTx = api.tx.staking.nominate(['5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ'])

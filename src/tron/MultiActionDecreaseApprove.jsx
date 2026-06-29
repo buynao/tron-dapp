@@ -1,17 +1,17 @@
 import { Button, message } from 'antd';
 import { useState } from 'react';
 
-// 常量配置 - DecreaseApprove + SendToken 场景
+// Constant configuration - DecreaseApprove + SendToken case
 const CONTRACTS = {
-  USDT: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t', // USDT 合约地址
+  USDT: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t', // USDT contract address
   FROM_ADDRESS: 'TKMBdaT5E5e4X3qtff3aY2ain5pG5WNPL2',
-  TARGET_ADDRESS: 'TDgJmYStKqzawFQyMav8XxNp1pTpdhEWg9',
+  TARGET_ADDRESS: 'TKzxdSv2FZKQrEqkKVgp5DcwEXBEKMg2Ax',
   TOKEN_ADDRESS: 'TVDGpn4hCSzJ5nkHPLetk8KQBtwaTppnkr',
   RECIPIENT_ADDRESS: 'TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL',
 };
 
 const TRANSACTION_PARAMS = {
-  DECREASE_AMOUNT: 50000000, // 减少授权 50 USDT
+  DECREASE_AMOUNT: 50000000, // decreaseapproval 50 USDT
   TOKEN_AMOUNT: 100,
   TOKEN_ID: '1002000',
 };
@@ -20,7 +20,7 @@ function MultiActionDecreaseApprove() {
   const [resultMessage, setResultMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 创建减少授权交易
+  // Createdecreaseapproval transaction
   const createDecreaseApproveTransaction = async (tronWeb) => {
     const parameter = [
       { type: 'address', value: CONTRACTS.TARGET_ADDRESS },
@@ -36,7 +36,7 @@ function MultiActionDecreaseApprove() {
     );
   };
 
-  // 创建发送代币交易
+  // Createsend token transaction
   const createSendTokenTransaction = async (tronWeb) => {
     return await tronWeb.transactionBuilder.sendToken(
       CONTRACTS.TOKEN_ADDRESS,
@@ -46,7 +46,7 @@ function MultiActionDecreaseApprove() {
     );
   };
 
-  // 合并交易
+  // Merge transaction
   const mergeTransactions = (
     decreaseApproveTransaction,
     sendTokenTransaction,
@@ -60,7 +60,7 @@ function MultiActionDecreaseApprove() {
     return { mergedTransaction: decreaseApproveTransaction, originalContract };
   };
 
-  // 签名并发送交易
+  // Sign and broadcast transaction
   const signAndSendTransaction = async (
     tronWeb,
     mergedTransaction,
@@ -79,16 +79,16 @@ function MultiActionDecreaseApprove() {
     return await tronWeb.trx.sendRawTransaction(signedTransaction);
   };
 
-  // 主要执行函数
+  // Main execution function
   const executeMultiAction = async () => {
     const tronWeb = window.tronWeb;
 
     if (!tronWeb) {
-      throw new Error('TronWeb 未加载，请确保已连接 Tron 钱包');
+      throw new Error('TronWeb is not loaded; make sure a Tron wallet is connected');
     }
 
     try {
-      message.info('创建减少授权 + 发送代币交易中...');
+      message.info('Createdecreaseapproval + send token transaction...');
 
       const [decreaseApproveTransaction, sendTokenTransaction] =
         await Promise.all([
@@ -96,40 +96,40 @@ function MultiActionDecreaseApprove() {
           createSendTokenTransaction(tronWeb),
         ]);
 
-      message.info('合并交易中...');
+      message.info('Merging transactions...');
       const { mergedTransaction, originalContract } = mergeTransactions(
         decreaseApproveTransaction,
         sendTokenTransaction,
       );
 
-      message.info('签名并发送交易中...');
+      message.info('Signing and broadcasting transaction...');
       const result = await signAndSendTransaction(
         tronWeb,
         mergedTransaction,
         originalContract,
       );
 
-      console.log('减少授权 + 发送代币交易结果:', result);
+      console.log('decreaseapproval + send tokenTransaction result:', result);
       return result;
     } catch (error) {
-      console.error('减少授权 + 发送代币交易执行失败:', error);
+      console.error('decreaseapproval + send tokenTransaction failed:', error);
       throw error;
     }
   };
 
-  // 按钮点击处理函数
+  // Button click handler
   const handleButtonClick = async () => {
     setIsLoading(true);
     setResultMessage('');
 
     try {
       const result = await executeMultiAction();
-      setResultMessage(`交易成功: ${JSON.stringify(result)}`);
-      message.success('减少授权 + 发送代币执行成功！');
+      setResultMessage(`Transaction succeeded: ${JSON.stringify(result)}`);
+      message.success('decreaseapproval + send tokensucceeded!');
     } catch (error) {
-      const errorMessage = error.message || '未知错误';
-      setResultMessage(`交易失败: ${errorMessage}`);
-      message.error(`交易执行失败: ${errorMessage}`);
+      const errorMessage = error.message || 'Unknown error';
+      setResultMessage(`Transaction failed: ${errorMessage}`);
+      message.error(`Transaction failed: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -137,7 +137,7 @@ function MultiActionDecreaseApprove() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h3>减少授权 + 发送代币多合约签名</h3>
+      <h3>decreaseapproval + send token multi-contract signing</h3>
 
       <Button
         type="primary"
@@ -146,7 +146,7 @@ function MultiActionDecreaseApprove() {
         onClick={handleButtonClick}
         style={{ marginBottom: '16px' }}
       >
-        {isLoading ? '执行中...' : '执行减少授权 + 发送代币'}
+        {isLoading ? 'Running...' : 'Run decreaseapproval + send token'}
       </Button>
 
       {resultMessage && (
@@ -159,7 +159,7 @@ function MultiActionDecreaseApprove() {
             wordBreak: 'break-all',
           }}
         >
-          <strong>执行结果:</strong>
+          <strong>Result:</strong>
           <div style={{ marginTop: '8px' }}>{resultMessage}</div>
         </div>
       )}

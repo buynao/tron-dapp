@@ -39,7 +39,7 @@ function CreateProposal() {
   return (
       <Button onClick={async () => {
         try {
-          message.info("发起交易中...")
+          message.info("Starting request...")
           setLoading(true)
           const account = await getAccounts()
           console.log(account)

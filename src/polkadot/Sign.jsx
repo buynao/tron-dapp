@@ -9,7 +9,7 @@ const Sign = ({ disabled }) => {
   return <div><Button disabled={disabled} onClick={async () => {
       const api = getAPI()
       if (api) {
-      message.loading('发起App请求...')
+      message.loading('Starting app request...')
       const tx = api.tx.balances
         .transfer('5C5555yEXUcmEJ5kkcCMvdZjUo7NGJiQJMS7vZXEeoMhj3VQ', 123456)
       signAndSend(tx)

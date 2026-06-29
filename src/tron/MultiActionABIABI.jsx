@@ -1,23 +1,23 @@
 import { Button, message } from 'antd';
 import { useState } from 'react';
 
-// 常量配置 - ABI 合约 + ABI 合约场景
+// Constant configuration - swapExactETHForTokens + swapExactInput case
 const CONTRACTS = {
-  ABI_CONTRACT_1: '41ff7155b5df8008fbf3834922b2d52430b27874f5', // DEX 合约
-  ABI_CONTRACT_2: '413c9e0ac33f138216c50638d71c344a299d0d1030', // 流动性池合约
+  ABI_CONTRACT_1: '41ff7155b5df8008fbf3834922b2d52430b27874f5',
+  ABI_CONTRACT_2: '413c9e0ac33f138216c50638d71c344a299d0d1030',
   FROM_ADDRESS: 'TKMBdaT5E5e4X3qtff3aY2ain5pG5WNPL2',
 };
 
 const TRANSACTION_PARAMS = {
-  FIRST_CALL_VALUE: '1500000', // 第一个 ABI 合约调用值 1.5 TRX
-  SECOND_CALL_VALUE: '3000000', // 第二个 ABI 合约调用值 3 TRX
+  FIRST_CALL_VALUE: '1500000', // swapExactETHForTokens call value 1.5 TRX
+  SECOND_CALL_VALUE: '3000000', // swapExactInput call value 3 TRX
 };
 
 function MultiActionABIABI() {
   const [resultMessage, setResultMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 创建第一个 ABI 智能合约交易 - DEX 交换
+  // Create swapExactETHForTokens(uint256,address[],address,uint256)  transaction
   const createFirstABITransaction = async (tronWeb) => {
     return {
       transaction: {
@@ -51,7 +51,7 @@ function MultiActionABIABI() {
     };
   };
 
-  // 创建第二个 ABI 智能合约交易 - 流动性操作
+  // Create swapExactInput(address[],string[],uint256[],uint24[],(...))  transaction
   const createSecondABITransaction = async (tronWeb) => {
     return {
       transaction: {
@@ -85,7 +85,7 @@ function MultiActionABIABI() {
     };
   };
 
-  // 合并交易
+  // Merge transaction
   const mergeTransactions = (firstABITransaction, secondABITransaction) => {
     firstABITransaction.transaction.raw_data.contract[1] =
       secondABITransaction.transaction.raw_data.contract[0];
@@ -104,66 +104,66 @@ function MultiActionABIABI() {
     };
   };
 
-  // 签名并发送交易
+  // Sign and broadcast transaction
   const signAndSendTransaction = async (tronWeb, mergedTransaction) => {
     console.log('>>> mergedTransaction', mergedTransaction);
 
     return await tronWeb.trx.sign(mergedTransaction.transaction);
   };
 
-  // 主要执行函数
+  // Main execution function
   const executeMultiAction = async () => {
     const tronWeb = window.tronWeb;
 
     if (!tronWeb) {
-      throw new Error('TronWeb 未加载，请确保已连接 Tron 钱包');
+      throw new Error('TronWeb is not loaded; make sure a Tron wallet is connected');
     }
 
     try {
-      message.info('创建双 ABI 合约交易中...');
+      message.info('Create swapExactETHForTokens + swapExactInput  transaction...');
 
       const [firstABITransaction, secondABITransaction] = await Promise.all([
         createFirstABITransaction(tronWeb),
         createSecondABITransaction(tronWeb),
       ]);
 
-      console.log('>>> 第一个 ABI 合约交易:', firstABITransaction);
-      console.log('>>> 第二个 ABI 合约交易:', secondABITransaction);
+      console.log('>>> swapExactETHForTokens  transaction:', firstABITransaction);
+      console.log('>>> swapExactInput  transaction:', secondABITransaction);
 
-      message.info('合并双 ABI 交易中...');
+      message.info('Merge swapExactETHForTokens + swapExactInput  transaction...');
       const { mergedTransaction, originalContract } = mergeTransactions(
         firstABITransaction,
         secondABITransaction,
       );
 
-      message.info('签名并发送双 ABI 交易中...');
+      message.info('Sign and broadcast swapExactETHForTokens + swapExactInput  transaction...');
       const result = await signAndSendTransaction(
         tronWeb,
         mergedTransaction,
         originalContract,
       );
 
-      console.log('双 ABI 合约交易结果:', result);
+      console.log('swapExactETHForTokens + swapExactInput Transaction result:', result);
       return result;
     } catch (error) {
-      console.error('双 ABI 合约交易执行失败:', error);
+      console.error('swapExactETHForTokens + swapExactInput Transaction failed:', error);
       throw error;
     }
   };
 
-  // 按钮点击处理函数
+  // Button click handler
   const handleButtonClick = async () => {
     setIsLoading(true);
     setResultMessage('');
 
     try {
       const result = await executeMultiAction();
-      setResultMessage(`交易成功: ${JSON.stringify(result)}`);
-      message.success('双 ABI 合约交易执行成功！');
+      setResultMessage(`Transaction succeeded: ${JSON.stringify(result)}`);
+      message.success('swapExactETHForTokens + swapExactInput succeeded!');
     } catch (error) {
-      const errorMessage = error.message || '未知错误';
-      setResultMessage(`交易失败: ${errorMessage}`);
-      message.error(`交易执行失败: ${errorMessage}`);
+      const errorMessage = error.message || 'Unknown error';
+      setResultMessage(`Transaction failed: ${errorMessage}`);
+      message.error(`Transaction failed: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -171,21 +171,21 @@ function MultiActionABIABI() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h3>ABI 合约 + ABI 合约多签名交易</h3>
+      <h3>swapExactETHForTokens + swapExactInput  multi-action transaction</h3>
       <div style={{ color: '#666', marginBottom: '16px', lineHeight: '1.5' }}>
         <p>
-          <strong>双 ABI 合约组合说明:</strong>
+          <strong>Contract combination:</strong>
         </p>
         <ul style={{ paddingLeft: '20px', margin: '8px 0' }}>
-          <li>第一个 ABI 合约: DEX 代币交换 (swapExactETHForTokens)</li>
-          <li>调用价值: {TRANSACTION_PARAMS.FIRST_CALL_VALUE / 1000000} TRX</li>
-          <li>第二个 ABI 合约: 流动性池操作 (复杂流动性管理)</li>
+          <li>swapExactETHForTokens: DEX token swap</li>
+          <li>Call value: {TRANSACTION_PARAMS.FIRST_CALL_VALUE / 1000000} TRX</li>
+          <li>swapExactInput: multi-path exact-input swap</li>
           <li>
-            调用价值: {TRANSACTION_PARAMS.SECOND_CALL_VALUE / 1000000} TRX
+            Call value: {TRANSACTION_PARAMS.SECOND_CALL_VALUE / 1000000} TRX
           </li>
         </ul>
         <p style={{ fontSize: '12px', color: '#999', marginTop: '8px' }}>
-          注意: 这是最复杂的多合约组合，适用于高级 DeFi 策略执行
+          Note: this is the most complex multi-contract combination and is suitable for advanced DeFi strategy execution
         </p>
       </div>
 
@@ -196,7 +196,7 @@ function MultiActionABIABI() {
         onClick={handleButtonClick}
         style={{ marginBottom: '16px' }}
       >
-        {isLoading ? '执行中...' : '执行双 ABI 合约交易'}
+        {isLoading ? 'Running...' : 'Run swapExactETHForTokens + swapExactInput'}
       </Button>
 
       {resultMessage && (
@@ -209,7 +209,7 @@ function MultiActionABIABI() {
             wordBreak: 'break-all',
           }}
         >
-          <strong>执行结果:</strong>
+          <strong>Result:</strong>
           <div style={{ marginTop: '8px' }}>{resultMessage}</div>
         </div>
       )}

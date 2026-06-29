@@ -1,9 +1,9 @@
 import { Button, message } from 'antd';
 import { useState } from 'react';
 
-// 常量配置 - FreezeBalance + Transfer 场景
+// Constant configuration - FreezeBalance + Transfer case
 const CONTRACTS = {
-  USDT: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t', // USDT 合约地址
+  USDT: 'TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t', // USDT contract address
   SYSTEM: 'T9yD14Nj9j7xAB4dbGeiX9h8unkKHxuWwb', // System contract
   FROM_ADDRESS: 'TKMBdaT5E5e4X3qtff3aY2ain5pG5WNPL2',
   RECIPIENT_ADDRESS: 'TNPeeaaFB7K9cmo4uQpcU32zGK8G1NYqeL',
@@ -19,9 +19,9 @@ function MultiActionFreeze() {
   const [resultMessage, setResultMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 创建质押交易 - 使用固定合约结构
+  // CreateStake transaction - Use fixed contract structure
   const createFreezeTransaction = async (tronWeb) => {
-    // 直接构造 FreezeBalanceV2Contract 结构
+    // Build the FreezeBalanceV2Contract structure directly
     const freeze = await tronWeb.transactionBuilder.freezeBalanceV2(
       tronWeb.toSun(1),
       'BANDWIDTH',
@@ -33,7 +33,7 @@ function MultiActionFreeze() {
     return { transaction: freeze };
   };
 
-  // 创建智能合约转账交易
+  // Create smart contract transfer transaction.
   const createTransferTransaction = async (tronWeb) => {
     const parameter = [
       { type: 'address', value: CONTRACTS.RECIPIENT_ADDRESS },
@@ -41,28 +41,28 @@ function MultiActionFreeze() {
     ];
 
     return await tronWeb.transactionBuilder.triggerSmartContract(
-      CONTRACTS.USDT, // 使用 USDT 合约
-      'transfer(address,uint256)', // 转账方法
+      CONTRACTS.USDT, // Use USDT contract
+      'transfer(address,uint256)', // transfermethod
       {},
       parameter,
       CONTRACTS.FROM_ADDRESS,
     );
   };
 
-  // 合并交易
+  // Merge transaction
   const mergeTransactions = (freezeTransaction, transferTransaction) => {
-    // 保存原始合约信息 - 现在两个交易都是 { transaction: {...} } 结构
+    // Save original contract information; both transactions use the { transaction: {...} } structure.
     const originalContract =
       transferTransaction.transaction.raw_data.contract[0];
 
-    // 将转账交易添加到质押交易中
+    // Add the transfer transaction to the stake transaction.
     transferTransaction.transaction.raw_data.contract[1] =
       freezeTransaction.transaction.raw_data.contract[0];
 
     return { mergedTransaction: transferTransaction, originalContract };
   };
 
-  // 签名并发送交易
+  // Sign and broadcast transaction
   const signAndSendTransaction = async (
     tronWeb,
     mergedTransaction,
@@ -72,30 +72,30 @@ function MultiActionFreeze() {
       '>>> signAndSendTransaction MultiActionUnfreeze',
       mergedTransaction,
     );
-    // 签名交易 - mergedTransaction 现在是 { transaction: {...} } 格式
+    // Sign transaction - mergedTransaction is now { transaction: {...} } format
     const signedTransaction = await tronWeb.trx.sign(
       mergedTransaction.transaction,
     );
 
-    // 恢复原始合约信息
+    // Restore original contract information
     signedTransaction.raw_data.contract[1] = originalContract;
 
-    // 发送交易
+    // send transaction
     return await tronWeb.trx.sendRawTransaction(signedTransaction);
   };
 
-  // 主要执行函数
+  // Main execution function
   const executeMultiAction = async () => {
     const tronWeb = window.tronWeb;
 
     if (!tronWeb) {
-      throw new Error('TronWeb 未加载，请确保已连接 Tron 钱包');
+      throw new Error('TronWeb is not loaded; make sure a Tron wallet is connected');
     }
 
     try {
-      message.info('创建质押 + Transfer 交易中...');
+      message.info('CreateStake + Transfer  transaction...');
 
-      // 并行创建两个交易
+      // ParallelCreatetwo transaction
       const [freezeTransaction, transferTransaction] = await Promise.all([
         createFreezeTransaction(tronWeb),
         createTransferTransaction(tronWeb),
@@ -103,41 +103,41 @@ function MultiActionFreeze() {
       console.log('>>> freezeTransaction', freezeTransaction);
       console.log('>>> transferTransaction', transferTransaction);
 
-      message.info('合并交易中...');
+      message.info('Merging transactions...');
       const { mergedTransaction, originalContract } = mergeTransactions(
         freezeTransaction,
         transferTransaction,
       );
       console.log('>>> mergedTransaction', mergedTransaction);
 
-      message.info('签名并发送交易中...', mergedTransaction);
+      message.info('Signing and broadcasting transaction...', mergedTransaction);
       const result = await signAndSendTransaction(
         tronWeb,
         mergedTransaction,
         originalContract,
       );
 
-      console.log('质押 + Transfer 交易结果:', result);
+      console.log('Stake + Transfer Transaction result:', result);
       return result;
     } catch (error) {
-      console.error('质押 + Transfer 交易执行失败:', error);
+      console.error('Stake + Transfer Transaction failed:', error);
       throw error;
     }
   };
 
-  // 按钮点击处理函数
+  // Button click handler
   const handleButtonClick = async () => {
     setIsLoading(true);
     setResultMessage('');
 
     try {
       const result = await executeMultiAction();
-      setResultMessage(`交易成功: ${JSON.stringify(result)}`);
-      message.success('质押 + Transfer 执行成功！');
+      setResultMessage(`Transaction succeeded: ${JSON.stringify(result)}`);
+      message.success('Stake + Transfer succeeded!');
     } catch (error) {
-      const errorMessage = error.message || '未知错误';
-      setResultMessage(`交易失败: ${errorMessage}`);
-      message.error(`交易执行失败: ${errorMessage}`);
+      const errorMessage = error.message || 'Unknown error';
+      setResultMessage(`Transaction failed: ${errorMessage}`);
+      message.error(`Transaction failed: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -145,7 +145,7 @@ function MultiActionFreeze() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h3>质押 + Transfer 多合约签名</h3>
+      <h3>Stake + Transfer  multi-contract signing</h3>
 
       <Button
         type="primary"
@@ -154,7 +154,7 @@ function MultiActionFreeze() {
         onClick={handleButtonClick}
         style={{ marginBottom: '16px' }}
       >
-        {isLoading ? '执行中...' : '执行质押 + Transfer'}
+        {isLoading ? 'Running...' : 'Run Stake + Transfer'}
       </Button>
 
       {resultMessage && (
@@ -167,7 +167,7 @@ function MultiActionFreeze() {
             wordBreak: 'break-all',
           }}
         >
-          <strong>执行结果:</strong>
+          <strong>Result:</strong>
           <div style={{ marginTop: '8px' }}>{resultMessage}</div>
         </div>
       )}

@@ -9,7 +9,7 @@ function FreezeBalance() {
       <Button loading={loading}  onClick={async () => {
         const tronWeb = window.tronWeb;
         try {
-          message.info("发起交易中...")
+          message.info("Starting request...")
           setLoading(true)
           console.log(">>>>>>>window.tronWeb.defaultAddress", window.tronWeb.defaultAddress.hex)
           const balance = await tronWeb.trx.getBalance(window.tronWeb.defaultAddress.hex)

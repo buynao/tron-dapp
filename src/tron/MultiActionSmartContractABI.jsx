@@ -1,7 +1,7 @@
 import { Button, message } from 'antd';
 import { useState } from 'react';
 
-// 常量配置 - TriggerSmartContract + SendTrx 场景
+// Constant configuration - swapExactInput + SendTrx case
 const CONTRACTS = {
   SMART_CONTRACT: '413c9e0ac33f138216c50638d71c344a299d0d1030',
   FROM_ADDRESS: 'TKMBdaT5E5e4X3qtff3aY2ain5pG5WNPL2',
@@ -9,8 +9,8 @@ const CONTRACTS = {
 };
 
 const TRANSACTION_PARAMS = {
-  CALL_VALUE: '32314887', // 智能合约调用值
-  TRX_AMOUNT: 1, // 发送 100 TRX
+  CALL_VALUE: '32314887', // swapExactInput call value
+  TRX_AMOUNT: 1, // send 100 TRX
   SMART_CONTRACT_DATA:
     'cef95229000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000001a0',
 };
@@ -19,7 +19,7 @@ function MultiActionSmartContract() {
   const [resultMessage, setResultMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 创建智能合约调用交易
+  // Create swapExactInput contract call transaction
   const createSmartContractTransaction = async (tronWeb) => {
     return {
       transaction: {
@@ -53,7 +53,7 @@ function MultiActionSmartContract() {
     };
   };
 
-  // 创建智能合约调用交易 ABI
+  // Create swapExactETHForTokens contract call transaction
   const createSmartContractABITransaction = async (tronWeb) => {
     return {
       visible: false,
@@ -84,7 +84,7 @@ function MultiActionSmartContract() {
     };
   };
 
-  // 创建TRX转账交易
+  // CreateTRXtransfer transaction
   const createSendTrxTransaction = async (tronWeb) => {
     return await tronWeb.transactionBuilder.sendTrx(
       CONTRACTS.RECIPIENT_ADDRESS,
@@ -93,7 +93,7 @@ function MultiActionSmartContract() {
     );
   };
 
-  // 合并交易
+  // Merge transaction
   const mergeTransactions = (smartContractTransaction, sendTrxTransaction) => {
     smartContractTransaction.transaction.raw_data.contract[1] =
       sendTrxTransaction.raw_data.contract[0];
@@ -104,7 +104,7 @@ function MultiActionSmartContract() {
     };
   };
 
-  // 签名并发送交易
+  // Sign and broadcast transaction
   const signAndSendTransaction = async (
     tronWeb,
     mergedTransaction,
@@ -119,56 +119,56 @@ function MultiActionSmartContract() {
     signedTransaction.raw_data.contract[1] = originalContract;
   };
 
-  // 主要执行函数
+  // Main execution function
   const executeMultiAction = async () => {
     const tronWeb = window.tronWeb;
 
     if (!tronWeb) {
-      throw new Error('TronWeb 未加载，请确保已连接 Tron 钱包');
+      throw new Error('TronWeb is not loaded; make sure a Tron wallet is connected');
     }
 
     try {
-      message.info('创建智能合约调用 + TRX转账交易中...');
+      message.info('Create swapExactInput + TRXtransfer transaction...');
 
       const [smartContractTransaction, sendTrxTransaction] = await Promise.all([
         createSmartContractTransaction(tronWeb),
         createSendTrxTransaction(tronWeb),
       ]);
 
-      message.info('合并交易中...');
+      message.info('Merging transactions...');
       const { mergedTransaction, originalContract } = mergeTransactions(
         smartContractTransaction,
         sendTrxTransaction,
       );
 
-      message.info('签名并发送交易中...');
+      message.info('Signing and broadcasting transaction...');
       const result = await signAndSendTransaction(
         tronWeb,
         mergedTransaction,
         originalContract,
       );
 
-      console.log('智能合约调用 + TRX转账交易结果:', result);
+      console.log('swapExactInput + TRXtransferTransaction result:', result);
       return result;
     } catch (error) {
-      console.error('智能合约调用 + TRX转账交易执行失败:', error);
+      console.error('swapExactInput + TRXtransferTransaction failed:', error);
       throw error;
     }
   };
 
-  // 按钮点击处理函数
+  // Button click handler
   const handleButtonClick = async () => {
     setIsLoading(true);
     setResultMessage('');
 
     try {
       const result = await executeMultiAction();
-      setResultMessage(`交易成功: ${JSON.stringify(result)}`);
-      message.success('智能合约调用 + TRX转账执行成功！');
+      setResultMessage(`Transaction succeeded: ${JSON.stringify(result)}`);
+      message.success('swapExactInput + TRXtransfersucceeded!');
     } catch (error) {
-      const errorMessage = error.message || '未知错误';
-      setResultMessage(`交易失败: ${errorMessage}`);
-      message.error(`交易执行失败: ${errorMessage}`);
+      const errorMessage = error.message || 'Unknown error';
+      setResultMessage(`Transaction failed: ${errorMessage}`);
+      message.error(`Transaction failed: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
@@ -176,9 +176,9 @@ function MultiActionSmartContract() {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h3>智能合约调用 + TRX转账多合约签名</h3>
+      <h3>swapExactInput + TRXtransfer multi-contract signing</h3>
       <p style={{ color: '#666', marginBottom: '16px' }}>
-        智能合约调用 + 发送 {TRANSACTION_PARAMS.TRX_AMOUNT} TRX
+        swapExactInput + send {TRANSACTION_PARAMS.TRX_AMOUNT} TRX
       </p>
 
       <Button
@@ -188,7 +188,7 @@ function MultiActionSmartContract() {
         onClick={handleButtonClick}
         style={{ marginBottom: '16px' }}
       >
-        {isLoading ? '执行中...' : '执行智能合约调用 + TRX转账'}
+        {isLoading ? 'Running...' : 'Run swapExactInput + TRXtransfer'}
       </Button>
 
       {resultMessage && (
@@ -201,7 +201,7 @@ function MultiActionSmartContract() {
             wordBreak: 'break-all',
           }}
         >
-          <strong>执行结果:</strong>
+          <strong>Result:</strong>
           <div style={{ marginTop: '8px' }}>{resultMessage}</div>
         </div>
       )}

@@ -7,7 +7,7 @@ const Second = ({ disabled }) => {
   const [msg, setMsg] = useState('')
   return <div><Button disabled={disabled} onClick={async () => {
       const api = getAPI()
-      message.loading('发起App请求...')
+      message.loading('Starting app request...')
       if (api) {
       const secondTx = api.tx.democracy.second(1)
       signAndSend(secondTx)

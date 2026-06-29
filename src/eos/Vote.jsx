@@ -9,7 +9,7 @@ function Vote() {
     <div>
       <Button loading={loading} onClick={async () => {
         try {
-          message.info("发起交易中...")
+          message.info("Starting request...")
           setLoading(true)
           console.log(imToken)
           const result = await imToken.callPromisifyAPI('eos.signTransaction', {
